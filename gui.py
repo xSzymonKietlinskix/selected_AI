@@ -15,6 +15,11 @@ def print_entries():
     # Pobierz wartości wpisane do pól Entry
     m_row = entry_1.get()
     n_colls = entry_59.get()
+    square_size = 60
+    square_size = min(522 / int(m_row), 480 / int(n_colls))
+    board_preview = BoardPreview(window, int(m_row), int(n_colls), square_size, 'white')
+    board_preview.place(x = 628, y = 25)
+    # 1150 508
     # n_of_a_value = entry_2.get()
     # n_of_d_value = entry_3.get()
     # n_of_b_value = entry_5.get()
@@ -29,6 +34,33 @@ def print_entries():
     # print("n_of_B:", n_of_b_value)
     # print("n_of_iter:", n_of_iter_value)
     # print("n_of_exper:", n_of_exper_value)
+
+class BoardPreview(Canvas):
+    def __init__(self, master, rows, columns, square_size, color):
+        super().__init__(master, width=columns * square_size, height=rows * square_size)
+        self.rows = rows
+        self.columns = columns
+        self.square_size = square_size
+        self.color = color
+        self.draw_board()
+
+    def draw_board(self):
+        for row in range(self.rows):
+            for col in range(self.columns):
+                x0 = col * self.square_size
+                y0 = row * self.square_size
+                x1 = x0 + self.square_size
+                y1 = y0 + self.square_size
+                color = self.color
+                self.create_rectangle(x0, y0, x1, y1, fill=color, outline='black')
+
+# Przykładowe kolory planszy
+board_colors = [
+    ['red', 'green', 'blue'],
+    ['yellow', 'orange', 'purple'],
+    ['cyan', 'magenta', 'brown']
+]
+
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -1610,34 +1642,7 @@ canvas.create_text(
     font=("Inter", 14 * -1)
 )
 
-# entry_image_48 = PhotoImage(
-#     file=relative_to_assets("entry_48.png"))
-# entry_bg_48 = canvas.create_image(
-#     263.0,
-#     62.0,
-#     image=entry_image_48
-# )
-# entry_48 = Entry(
-#     bd=0,
-#     bg="#D9D9D9",
-#     fg="#000716",
-#     highlightthickness=0
-# )
-# entry_48.place(
-#     x=256.0,
-#     y=55.0,
-#     width=14.0,
-#     height=12.0
-# )
-#
-# canvas.create_text(
-#     275.0,
-#     52.0,
-#     anchor="nw",
-#     text="read CA_STATES",
-#     fill="#000000",
-#     font=("Inter", 14 * -1)
-# )
+
 
 read_selection = IntVar()
 
@@ -1650,63 +1655,6 @@ radiobutton_2.place(x=256, y=73)
 radiobutton_3 = Radiobutton(window, text="read RAND_NUM", variable=read_selection, value=3, highlightthickness=0)
 radiobutton_3.place(x=256, y=91)
 
-# entry_image_49 = PhotoImage(
-#     file=relative_to_assets("entry_49.png"))
-# entry_bg_49 = canvas.create_image(
-#     263.0,
-#     98.0,
-#     image=entry_image_49
-# )
-# entry_49 = Entry(
-#     bd=0,
-#     bg="#D9D9D9",
-#     fg="#000716",
-#     highlightthickness=0
-# )
-# entry_49.place(
-#     x=256.0,
-#     y=91.0,
-#     width=14.0,
-#     height=12.0
-# )
-#
-# canvas.create_text(
-#     275.0,
-#     88.0,
-#     anchor="nw",
-#     text="read RAND_NUM",
-#     fill="#000000",
-#     font=("Inter", 14 * -1)
-# )
-
-# entry_image_50 = PhotoImage(
-#     file=relative_to_assets("entry_50.png"))
-# entry_bg_50 = canvas.create_image(
-#     263.0,
-#     80.0,
-#     image=entry_image_50
-# )
-# entry_50 = Entry(
-#     bd=0,
-#     bg="#D9D9D9",
-#     fg="#000716",
-#     highlightthickness=0
-# )
-# entry_50.place(
-#     x=256.0,
-#     y=73.0,
-#     width=14.0,
-#     height=12.0
-# )
-#
-# canvas.create_text(
-#     275.0,
-#     70.0,
-#     anchor="nw",
-#     text="read A_PROFILE",
-#     fill="#000000",
-#     font=("Inter", 14 * -1)
-# )
 
 entry_image_51 = PhotoImage(
     file=relative_to_assets("entry_51.png"))
@@ -2019,6 +1967,9 @@ canvas.create_rectangle(
     755.0,
     fill="#000000",
     outline="")
+
+
+
 
 display_button = Button(window, text="Wyświetl wartości", command=print_entries)
 display_button.place(x=450, y=800)
