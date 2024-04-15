@@ -8,7 +8,7 @@ class Variables:
         self.n_of_A = 0
         self.n_of_D = 0
         self.n_of_B = 0
-        self.n_of_itter = 0
+        self.n_of_iter = 0
         self.n_of_exper = 0
         self.debug = False
         self.read_CA_states = False

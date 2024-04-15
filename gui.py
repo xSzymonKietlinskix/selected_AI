@@ -2,7 +2,7 @@ import random
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from pathlib import Path
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Checkbutton, IntVar, Radiobutton, Label
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Checkbutton, IntVar, Radiobutton, Label, END
 from variables import Variables
 
 # Tworzy planszę
@@ -73,19 +73,75 @@ def debug_action():
         entry_1.insert(0, 6)
         # n_colls
         entry_59.insert(0, 6)
+        # n_of_A
+        entry_56.insert(0, 2)
+        # n_of_D
+        entry_57.insert(0, 2)
+        # n_of_B
+        entry_58.insert(0, 4)
+        # n_of_iter
+        entry_43.insert(0, 5)
+        # n_of_exper
+        entry_44.insert(0, 1)
+        # init_capitIC
+        entry_45.insert(0, 10)
+        # IQ_range_min
+        entry_2.insert(0, 70)
+        # IQ_range_max
+        entry_40.insert(0, 140)
+
         #AGENTS A
         var.board_values = [["" for _ in range(6 + 1)] for _ in range(6 + 1)]
         var.board_values[8 // 6 + 1][ 8 % 6 ] = 'A'
         var.board_values[22 // 6 + 1][22 % 6] = 'A'
         #dopisać reszte na podstawie moodla
 
+def clear():
+    # m_rows
+    entry_1.delete(0, END)
+    # n_colls
+    entry_59.delete(0, END)
+    # n_of_A
+    entry_56.delete(0, END)
+    # n_of_D
+    entry_57.delete(0, END)
+    # n_of_B
+    entry_58.delete(0, END)
+    # n_of_iter
+    entry_43.delete(0, END)
+    # n_of_exper
+    entry_44.delete(0, END)
+    # init_capitIC
+    entry_45.delete(0, END)
+    # IQ_range_min
+    entry_2.delete(0, END)
+    # IQ_range_max
+    entry_40.delete(0, END)
+
+
 def map_values():
     # Pobierz wartości wpisane do pól Entry i wpisz je do obiektu zawierającego zmienne
     var.m_rows = int(entry_1.get())
     var.n_colls = int(entry_59.get())
+    var.n_of_A = int(entry_56.get())
+    var.n_of_D = int(entry_57.get())
+    var.n_of_B = int(entry_58.get())
+    var.n_of_iter = int(entry_43.get())
+    var.n_of_exper = int(entry_44.get())
+    var.init_capitIC = int(entry_45.get())
+    var.IQ_range_min = int(entry_2.get())
+    var.IQ_range_max = int(entry_40.get())
 
+
+
+    # generowanie losowej planszy, gdy nie używamy pola debug. Będzie trzeba zmienić ale na razie nie wiem jak
     if var.board_values == None:
         var.board_values = [[random.choice(["", "X"]) for _ in range(var.m_rows + 1)] for _ in range(var.n_colls + 1)]
+
+    if debug.get() == 1:
+        var.debug = True
+    elif debug.get() == 0:
+        var.debug = False
 
     if read_selection.get() == 1:
         var.read_CA_states = True
@@ -1881,7 +1937,9 @@ canvas.create_rectangle(
 
 
 
-display_button = Button(window, text="Wyświetl wartości", command=map_values)
-display_button.place(x=450, y=800)
+display_button = Button(window, text="Start", command=map_values)
+display_button.place(x=500, y=800)
+display_button = Button(window, text="Clear", command=clear)
+display_button.place(x=540, y=800)
 window.resizable(False, False)
 window.mainloop()
