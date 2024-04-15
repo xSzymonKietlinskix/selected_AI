@@ -35,17 +35,16 @@ def create_board(var):
         y = (j + 0.5) * square_height
         canvas.create_text(x, y, text=str(j))
 
-    # na razie losowe wartości, później trzeba to ulepszyć i generować odpowiednio
-    board_values = [[random.choice(["", "X"]) for _ in range(m)] for _ in range(n)]
+
 
     # to pewnie trzeba będzie wyrzucić do osobnej funkcji
     # Wstawienie wartości do konkretnych pól planszy
     for row in range(n - 1):
         for col in range(m - 1):
-            if board_values[row + 1][col + 1] == "X":
+            if var.board_values[row + 1][col + 1] != "":
                 x = (col + 1) * square_width + square_width / 2
                 y = (row + 1) * square_height + square_height / 2
-                canvas.create_text(x, y, text="X", font=("Helvetica", 12, "bold"))
+                canvas.create_text(x, y, text=var.board_values[row + 1][col + 1], font=("Helvetica", 12, "bold"))
 
 
 # tworzy wykres
@@ -67,13 +66,26 @@ def draw_plot(window):
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.place(x = 620, y = 550)
 
-
+# pokazuje wartości debugowania po zaznaczeniu checboxa
+def debug_action():
+    if debug.get() == 1:
+        # m_rows
+        entry_1.insert(0, 6)
+        # n_colls
+        entry_59.insert(0, 6)
+        #AGENTS A
+        var.board_values = [["" for _ in range(6 + 1)] for _ in range(6 + 1)]
+        var.board_values[8 // 6 + 1][ 8 % 6 ] = 'A'
+        var.board_values[22 // 6 + 1][22 % 6] = 'A'
+        #dopisać reszte na podstawie moodla
 
 def map_values():
     # Pobierz wartości wpisane do pól Entry i wpisz je do obiektu zawierającego zmienne
-    var = Variables() #obiekt ze zmiennymi
     var.m_rows = int(entry_1.get())
     var.n_colls = int(entry_59.get())
+
+    if var.board_values == None:
+        var.board_values = [[random.choice(["", "X"]) for _ in range(var.m_rows + 1)] for _ in range(var.n_colls + 1)]
 
     if read_selection.get() == 1:
         var.read_CA_states = True
@@ -108,9 +120,11 @@ def print_values(var):
         print(f"{v}: {value}")
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\xiii5\Desktop\Notatki_stacja\UKSW\selected AI\test\build\assets\frame0")
-
+# OUTPUT_PATH = Path(__file__).parent
+# ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\xiii5\Desktop\Notatki_stacja\UKSW\selected AI\test\build\assets\frame0")
+# teraz jest uniweralna i działa na każdym urządzeniu
+SOURCE_PATH = Path(__file__).parent
+ASSETS_PATH = SOURCE_PATH / "assets" / "frame0"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -121,6 +135,7 @@ window.title("GUI v1")
 window.geometry("1200x850")
 window.configure(bg = "#F5D6CF")
 
+var = Variables() #obiekt ze zmiennymi
 
 canvas = Canvas(
     window,
@@ -520,7 +535,7 @@ canvas.create_text(
     401.0,
     787.0,
     anchor="nw",
-    text="???",
+    text = "rich",
     fill="#000000",
     font=("Inter", 14 * -1)
 )
@@ -1663,14 +1678,15 @@ radiobutton_5.place(x=256, y=139)
 radiobutton_6 = Radiobutton(window, text="test 3", variable=read_test, value=3, highlightthickness=0)
 radiobutton_6.place(x=256, y=157)
 
-
-
 debug = IntVar()
 
 C2 = Checkbutton(window, text = "Debug", variable = debug,
    onvalue = 1, offvalue = 0, height=0,
-   width = 5)
+   width = 5, command=debug_action)
 C2.place(x=256.0, y=32.0)
+
+
+
 
 
 

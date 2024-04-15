@@ -1,3 +1,6 @@
+import random
+
+
 class Variables:
     def __init__(self):
         self.m_rows = 0
@@ -62,5 +65,7 @@ class Variables:
         self.B3_p_avait = 0
         # WEALTH THR
         self.power = 0
-        self.fax = 0
-        self.dunno = 0
+        self.faix = 0
+        self.rich = 0
+        # na razie losowe wartości, później trzeba to ulepszyć i generować odpowiednio
+        self.board_values = None
