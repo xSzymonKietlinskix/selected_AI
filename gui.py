@@ -121,6 +121,7 @@ def clear():
 
 def map_values():
     # Pobierz wartości wpisane do pól Entry i wpisz je do obiektu zawierającego zmienne
+    #Top
     var.m_rows = int(entry_1.get())
     var.n_colls = int(entry_59.get())
     var.n_of_A = int(entry_56.get())
@@ -129,10 +130,57 @@ def map_values():
     var.n_of_iter = int(entry_43.get())
     var.n_of_exper = int(entry_44.get())
     var.init_capitIC = int(entry_45.get())
+    var.custom_seed = int(entry_55.get()) if entry_55.get() and entry_55.get.strip() else 0
+
+    # Parameters of A
     var.IQ_range_min = int(entry_2.get())
     var.IQ_range_max = int(entry_40.get())
+    # Health_State
+    var.p_HS1 = int(entry_4.get())
+    var.p_HS2 = int(entry_5.get())
+    var.p_HS3 = int(entry_6.get())
+    var.p_itl1 = int(entry_37.get())
+    var.p_itl2 = int(entry_38.get())
+    var.p_itl3 = int(entry_39.get())
+    var.iter_susp_B = int(entry_3.get())
+    # Risc_accept_level (IQ)
+    var.IQ_smaller_than = int(entry_41.get())
+    var.IQ_greater_than = int(entry_42.get())
+    var.B1_1 = int(entry_7.get())
+    var.B1_2 = int(entry_8.get())
+    var.B1_3 = int(entry_9.get())
+    var.B2_1 = int(entry_13.get())
+    var.B2_2 = int(entry_14.get())
+    var.B2_3 = int(entry_15.get())
+    var.B3_1 = int(entry_16.get())
+    var.B3_2 = int(entry_17.get())
+    var.B3_3 = int(entry_18.get())
+    # Mobility
+    var.p_mob_1 = int(entry_19.get())
+    var.p_mob_2 = int(entry_20.get())
+    var.p_mob_3 = int(entry_21.get())
 
+    # Business type
+    var.B1_ICthr = int(entry_22.get())
+    var.B2_ICthr = int(entry_23.get())
+    var.B3_ICthr = int(entry_24.get())
+    var.B1_inv_a = int(entry_25.get())
+    var.B2_inv_a = int(entry_27.get())
+    var.B3_inv_a = int(entry_26.get())
+    var.B1_gap = int(entry_28.get())
+    var.B2_gap = int(entry_30.get())
+    var.B3_gap = int(entry_29.get())
+    var.B1_p_risc = int(entry_31.get())
+    var.B2_p_risc = int(entry_33.get())
+    var.B3_p_risc = int(entry_32.get())
+    var.B1_p_avoid = int(entry_34.get())
+    var.B2_p_avoid = int(entry_36.get())
+    var.B3_p_avoid = int(entry_35.get())
 
+    # Wealth thr
+    var.power = int(entry_10.get())
+    var.fax = int(entry_11.get())
+    var.rich = int(entry_12.get())
 
     # generowanie losowej planszy, gdy nie używamy pola debug. Będzie trzeba zmienić ale na razie nie wiem jak
     if var.board_values == None:
@@ -164,7 +212,6 @@ def map_values():
         var.seed_value = int(entry_55.get())
 
 
-    #... dokończyć mapowanie
     create_board(var)
     draw_plot(window)
     print_values(var)

@@ -60,12 +60,12 @@ class Variables:
         self.B1_p_risc = 0
         self.B2_p_risc = 0
         self.B3_p_risc = 0
-        self.B1_p_avait = 0
-        self.B2_p_avait = 0
-        self.B3_p_avait = 0
+        self.B1_p_avoid = 0
+        self.B2_p_avoid = 0
+        self.B3_p_avoid = 0
         # WEALTH THR
         self.power = 0
-        self.faix = 0
+        self.fax = 0
         self.rich = 0
         # na razie losowe wartości, później trzeba to ulepszyć i generować odpowiednio
         self.board_values = None
