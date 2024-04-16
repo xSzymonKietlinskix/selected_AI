@@ -254,8 +254,8 @@ def map_values():
     var.rich = int(entry_12.get())
 
     # generowanie losowej planszy, gdy nie używamy pola debug. Będzie trzeba zmienić ale na razie nie wiem jak
-    if var.board_values == None:
-        var.board_values = [[random.choice(["", "X"]) for _ in range(var.m_rows + 1)] for _ in range(var.n_colls + 1)]
+    # if var.board_values == None:
+    #     var.board_values = [[random.choice(["", "X"]) for _ in range(var.m_rows + 1)] for _ in range(var.n_colls + 1)]
 
     if debug.get() == 1:
         var.debug = True
