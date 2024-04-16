@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Checkbutton, IntVar, Radiobutton, Label, END
 from variables import Variables
+import numpy as np
 
 # Tworzy planszę
 def create_board(var):
@@ -51,15 +52,20 @@ def create_board(var):
 def draw_plot(window):
     # Dane do wykresu
     x = [1, 2, 3, 4, 5]
-    y = [2, 3, 5, 7, 11]
+    y1 = [2, 3, 5, 7, 11]
+    y2 = [1, 4, 6, 8, 10]
+    y3 = [3, 2, 4, 6, 8]
 
     # Tworzenie wykresu
     fig = plt.figure(figsize=(5.5, 2.6))
     ax = fig.add_subplot(111)
-    ax.plot(x, y)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_title('Wykres liniowy')
+    ax.plot(x, y1, color='red' ,label='reach')
+    ax.plot(x, y2, color='green' , label='fair')
+    ax.plot(x, y3, color='blue' , label='power')
+    ax.set_xlabel('iteration')
+    ax.set_ylabel('av_capitol')
+    ax.legend()
+    # ax.set_title('Wykres liniowy')
 
     # Umieszczenie wykresu w widżecie Tkinter
     canvas = FigureCanvasTkAgg(fig, master=window)
@@ -90,11 +96,30 @@ def debug_action():
         # IQ_range_max
         entry_40.insert(0, 140)
 
+        #wczytanie tablicy stanów
+        board = load_board("Debugging data/CA_STATES.txt")
+
         #AGENTS A
-        var.board_values = [["" for _ in range(6 + 1)] for _ in range(6 + 1)]
-        var.board_values[8 // 6 + 1][ 8 % 6 ] = 'A'
-        var.board_values[22 // 6 + 1][22 % 6] = 'A'
+        var.board_values = board
         #dopisać reszte na podstawie moodla
+
+def load_board(file):
+    loaded_board = np.loadtxt(file)
+    new_row = np.full(loaded_board.shape[1], 0)
+    loaded_board = np.insert(loaded_board, 0, new_row, axis=0)
+    new_coll = np.full(loaded_board.shape[0], 0)
+    loaded_board = np.insert(loaded_board, 0, new_coll, axis=1)
+    map_num_to_letters = {
+        0: "",
+        3: "B1",
+        1: "A",
+        2: "D",
+        4: "B2",
+        5: "B3"
+    }
+    board = np.vectorize(map_num_to_letters.get)(loaded_board)
+
+    return board
 
 def clear():
     # m_rows
@@ -130,52 +155,51 @@ def map_values():
     var.n_of_iter = int(entry_43.get())
     var.n_of_exper = int(entry_44.get())
     var.init_capitIC = int(entry_45.get())
-    var.custom_seed = int(entry_55.get()) if entry_55.get() and entry_55.get.strip() else 0
 
     # Parameters of A
     var.IQ_range_min = int(entry_2.get())
     var.IQ_range_max = int(entry_40.get())
     # Health_State
-    var.p_HS1 = int(entry_4.get())
-    var.p_HS2 = int(entry_5.get())
-    var.p_HS3 = int(entry_6.get())
-    var.p_itl1 = int(entry_37.get())
-    var.p_itl2 = int(entry_38.get())
-    var.p_itl3 = int(entry_39.get())
+    var.p_HS1 = float(entry_4.get())
+    var.p_HS2 = float(entry_5.get())
+    var.p_HS3 = float(entry_6.get())
+    var.p_itl1 = float(entry_37.get())
+    var.p_itl2 = float(entry_38.get())
+    var.p_itl3 = float(entry_39.get())
     var.iter_susp_B = int(entry_3.get())
     # Risc_accept_level (IQ)
     var.IQ_smaller_than = int(entry_41.get())
     var.IQ_greater_than = int(entry_42.get())
-    var.B1_1 = int(entry_7.get())
-    var.B1_2 = int(entry_8.get())
-    var.B1_3 = int(entry_9.get())
-    var.B2_1 = int(entry_13.get())
-    var.B2_2 = int(entry_14.get())
-    var.B2_3 = int(entry_15.get())
-    var.B3_1 = int(entry_16.get())
-    var.B3_2 = int(entry_17.get())
-    var.B3_3 = int(entry_18.get())
+    var.B1_1 = float(entry_7.get())
+    var.B1_2 = float(entry_8.get())
+    var.B1_3 = float(entry_9.get())
+    var.B2_1 = float(entry_13.get())
+    var.B2_2 = float(entry_14.get())
+    var.B2_3 = float(entry_15.get())
+    var.B3_1 = float(entry_16.get())
+    var.B3_2 = float(entry_17.get())
+    var.B3_3 = float(entry_18.get())
     # Mobility
-    var.p_mob_1 = int(entry_19.get())
-    var.p_mob_2 = int(entry_20.get())
-    var.p_mob_3 = int(entry_21.get())
+    var.p_mob_1 = float(entry_19.get())
+    var.p_mob_2 = float(entry_20.get())
+    var.p_mob_3 = float(entry_21.get())
 
     # Business type
-    var.B1_ICthr = int(entry_22.get())
-    var.B2_ICthr = int(entry_23.get())
-    var.B3_ICthr = int(entry_24.get())
-    var.B1_inv_a = int(entry_25.get())
-    var.B2_inv_a = int(entry_27.get())
-    var.B3_inv_a = int(entry_26.get())
-    var.B1_gap = int(entry_28.get())
-    var.B2_gap = int(entry_30.get())
-    var.B3_gap = int(entry_29.get())
-    var.B1_p_risc = int(entry_31.get())
-    var.B2_p_risc = int(entry_33.get())
-    var.B3_p_risc = int(entry_32.get())
-    var.B1_p_avoid = int(entry_34.get())
-    var.B2_p_avoid = int(entry_36.get())
-    var.B3_p_avoid = int(entry_35.get())
+    var.B1_ICthr = float(entry_22.get())
+    var.B2_ICthr = float(entry_23.get())
+    var.B3_ICthr = float(entry_24.get())
+    var.B1_inv_a = float(entry_25.get())
+    var.B2_inv_a = float(entry_27.get())
+    var.B3_inv_a = float(entry_26.get())
+    var.B1_gap = float(entry_28.get())
+    var.B2_gap = float(entry_30.get())
+    var.B3_gap = float(entry_29.get())
+    var.B1_p_risc = float(entry_31.get())
+    var.B2_p_risc = float(entry_33.get())
+    var.B3_p_risc = float(entry_32.get())
+    var.B1_p_avoid = float(entry_34.get())
+    var.B2_p_avoid = float(entry_36.get())
+    var.B3_p_avoid = float(entry_35.get())
 
     # Wealth thr
     var.power = int(entry_10.get())
