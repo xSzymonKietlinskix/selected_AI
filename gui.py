@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Checkbutton, IntVar, Radiobutton, Label, END
 from variables import Variables
+import pandas as pd
 import numpy as np
 
 # Tworzy planszę
@@ -95,6 +96,52 @@ def debug_action():
         entry_2.insert(0, 70)
         # IQ_range_max
         entry_40.insert(0, 140)
+        # Health State
+        entry_4.insert(0, 0.15)
+        entry_5.insert(0, 0.60)
+        entry_6.insert(0, 0.25)
+        entry_37.insert(0, 0.70)
+        entry_38.insert(0, 0.20)
+        entry_39.insert(0, 0.10)
+        entry_3.insert(0, 1)
+        # Risc accept level (IQ)
+        entry_41.insert(0, 95)
+        entry_42.insert(0, 125)
+        entry_7.insert(0, 1.0)
+        entry_8.insert(0, 0.9)
+        entry_9.insert(0, 0.8)
+        entry_13.insert(0, 0.9)
+        entry_14.insert(0, 0.7)
+        entry_15.insert(0, 0.5)
+        entry_16.insert(0, 0.9)
+        entry_17.insert(0, 0.6)
+        entry_18.insert(0, 0.4)
+        # Mobility (IQ)
+        entry_19.insert(0, 0.0)
+        entry_20.insert(0, 0.3)
+        entry_21.insert(0, 0.1)
+        # Business Type
+        entry_22.insert(0, 1.0)
+        entry_23.insert(0, 1.0)
+        entry_24.insert(0, 0.8)
+        entry_25.insert(0, 0.2)
+        entry_27.insert(0, 0.5)
+        entry_26.insert(0, 0.5)
+        entry_28.insert(0, 2)
+        entry_30.insert(0, 4)
+        entry_29.insert(0, 8)
+        entry_31.insert(0, 0.10)
+        entry_33.insert(0, 0.30)
+        entry_32.insert(0, 0.50)
+        entry_34.insert(0, 0.50)
+        entry_36.insert(0, 0.35)
+        entry_35.insert(0, 0.15)
+
+        # Wealth thr
+        entry_10.insert(0, 10)
+        entry_11.insert(0, 30)
+        entry_12.insert(0, 50)
+
 
         #wczytanie tablicy stanów
         board = load_board("Debugging data/CA_STATES.txt")
@@ -255,6 +302,33 @@ ASSETS_PATH = SOURCE_PATH / "assets" / "frame0"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+
+def load_A_profiles():
+    data = pd.read_csv('A_PROFILE.txt.txt', comment='#', sep='\s+', header=None)
+    data.columns = ['A_id', 'A_glob_ID', 'IQ', 'HState', 'r_acc_B1', 'r_acc_B2', 'r_acc_B3', 'Mobility']
+    print(data)
+    return data
+
+def load_RAND_NUM():
+    with open("RAND_NUM.txt", 'r') as plik:
+        dane = plik.read().split()
+        dane = [float(i) for i in dane]
+
+    data = np.array(dane)
+    print(data)
+    return data
+
+class Agent:
+    def __init__(self, data, row):
+        self.A_id = data[row]['A_id']
+        self.A_glob_ID = data[row]['A_glob_ID']
+        self.IQ = data[row]['IQ']
+        self.HState = data[row]['HState']
+        self.r_acc_B2 = data[row]['r_acc_B2']
+        self.r_acc_B3 = data[row]['r_acc_B3']
+        self.Mobility = data[row]['Mobility']
+
+
 
 
 window = Tk()
