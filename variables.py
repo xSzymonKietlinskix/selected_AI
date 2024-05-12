@@ -31,9 +31,10 @@ class Variables:
         self.p_itl2 = 0
         self.p_itl3 = 0
         self.iter_susp_B = 0
+        self.D_IC_decr_rate = 0
         # RISC ACCEPT LEVEL
-        self.IQ_greater_than = 0
-        self.IQ_smaller_than = 0
+        self.IQ1_lower = 0
+        self.IQ3_greater = 0
         self.B1_1 = 0
         self.B1_2 = 0
         self.B1_3 = 0
@@ -49,19 +50,19 @@ class Variables:
         self.p_mob_3 = 0
         # BUISNESS TYPE
         self.B1_ICthr = 0
-        self.B2_ICthr = 0
-        self.B3_ICthr = 0
         self.B1_inv_a = 0
-        self.B2_inv_a = 0
-        self.B3_inv_a = 0
         self.B1_gap = 0
-        self.B2_gap = 0
-        self.B3_gap = 0
         self.B1_p_risc = 0
-        self.B2_p_risc = 0
-        self.B3_p_risc = 0
         self.B1_p_avoid = 0
+        self.B2_ICthr = 0
+        self.B2_inv_a = 0
+        self.B2_gap = 0
+        self.B2_p_risc = 0
         self.B2_p_avoid = 0
+        self.B3_ICthr = 0
+        self.B3_inv_a = 0
+        self.B3_gap = 0
+        self.B3_p_risc = 0
         self.B3_p_avoid = 0
         # WEALTH THR
         self.power = 0
