@@ -69,4 +69,4 @@ class Variables:
         self.fax = 0
         self.rich = 0
         # na razie losowe wartości, później trzeba to ulepszyć i generować odpowiednio
-        self.board_values = None
+        self.board_values = []
