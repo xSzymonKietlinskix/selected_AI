@@ -1,7 +1,10 @@
 from tkinter import *
+
+import program
 from variables import Variables
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from program import iter0
 
 class VariablesGUI:
     def __init__(self, master):
@@ -285,7 +288,15 @@ class VariablesGUI:
 
         self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
         self.create_plot(self.right_frame)
+        program.iter0(self.variables)
 
-root = Tk()
-app = VariablesGUI(root)
-root.mainloop()
+
+def main():
+    root = Tk()
+    app = VariablesGUI(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+
+

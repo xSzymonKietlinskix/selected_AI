@@ -3,8 +3,8 @@ import random
 
 class Variables:
     def __init__(self):
-        self.m_rows = 0
-        self.n_colls = 0
+        self.m_rows = int(0)
+        self.n_colls = int(0)
         self.n_of_A = 0
         self.n_of_D = 0
         self.n_of_B = 0
