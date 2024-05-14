@@ -5,6 +5,7 @@ from variables import Variables
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from program import iter0
+import time
 
 class VariablesGUI:
     def __init__(self, master):
@@ -19,6 +20,8 @@ class VariablesGUI:
         self.entries = {}
         self.create_widgets()
         self.debug_fun()
+        self.rectangles = []
+        self.root = master
 
     def debug_fun(self):
         if self.var_debug.get() is True:
@@ -82,7 +85,7 @@ class VariablesGUI:
 
         Checkbutton(self.left_frame, variable=self.var_debug, command=self.debug_fun).grid(row=r, column=c + 1)
 
-        self.variables.debug = self.var_debug
+        self.variables.debug = bool(self.var_debug)
 
 
         r += 1
@@ -245,16 +248,36 @@ class VariablesGUI:
         self.canvas = Canvas(self.right_frame, width=board_width, height=board_height, bg='white')
         self.canvas.pack()
 
+        self.rectangles = []
         for row_idx, row in enumerate(self.variables.board_values):
+            row_rectangles = []
             for col_idx, value in enumerate(row):
                 x1 = col_idx * cell_size
                 y1 = row_idx * cell_size
                 x2 = x1 + cell_size
                 y2 = y1 + cell_size
                 color = color_map.get(value, "white")
-                self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill=color)
+                rectangle = self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill=color)
+                row_rectangles.append(rectangle)
+                # self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill=color)
+            self.rectangles.append(row_rectangles)
 
         self.canvas.config(width=board_width, height=board_height)
+
+    def update_board(self):
+        color_map = {
+            0: "white",
+            1: "yellow",
+            2: "plum",
+            3: "#87ceeb",
+            4: "#0000cd",
+            5: "#4169e1"
+        }
+        # Update the color of each rectangle
+        for row_idx, row in enumerate(self.variables.board_values):
+            for col_idx, value in enumerate(row):
+                color = color_map.get(value, "white")
+                self.canvas.itemconfig(self.rectangles[row_idx][col_idx], fill=color)
 
     def create_plot(self, frame):
         # Create a new matplotlib figure and axes
@@ -268,6 +291,10 @@ class VariablesGUI:
 
         # Plot some data
         ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+
+    def update_gui(self):
+        self.root.update_idletasks()
+        self.root.update()
 
     def save_variables(self):
         for var_name, entry in self.entries.items():
@@ -286,9 +313,20 @@ class VariablesGUI:
         if len(self.variables.board_values) != int(self.variables.m_rows) or len(self.variables.board_values[0]) != int(self.variables.n_colls):
             self.variables.board_values = [[0] * int(self.variables.n_colls) for _ in range(int(self.variables.m_rows))]
 
-        self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
-        self.create_plot(self.right_frame)
-        program.iter0(self.variables)
+        for i in range(0, int(self.variables.n_of_iter)):
+            print("Iteracja: ", i)
+            if i == 0:
+               self.variables.board_values = program.iter0(self.variables)
+               self.create_plot(self.right_frame)
+               self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
+               self.update_board()
+            else:
+                self.variables.board_values[0][2] = 0
+                self.update_board()
+            self.update_gui()
+            time.sleep(1)
+
+
 
 
 def main():
