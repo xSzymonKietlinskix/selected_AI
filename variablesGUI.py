@@ -221,8 +221,6 @@ class VariablesGUI:
             if i == 59:
                 break
 
-
-
         self.save_button = Button(self.left_frame, text="ok", command=self.save_variables)
         self.save_button.grid(row=len(self.variables.__dict__), column=1)
 
