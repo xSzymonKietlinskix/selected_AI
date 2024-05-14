@@ -4,6 +4,13 @@ class CaStates:
         self.colls = int(colls)
         self.board = [[0] * (int(self.colls) + 1)for _ in range((int(self.rows) + 1))]
 
+    def __str__(self):
+        board_str = ""
+        for row in self.board:
+            board_str += " ".join(map(str, row)) + "\n"
+        return board_str
+
+
 class AProfile:
     def __init__(self, id, glob_id, IQ, Hstate, r_acc_B1, r_acc_B2, r_acc_B3, Mobility):
         self.Mobility = Mobility
@@ -14,6 +21,9 @@ class AProfile:
         self.IQ = IQ
         self.glob_id = glob_id
         self.id = id
+
+    def __str__(self):
+        return f"{self.id, self.glob_id, self.IQ, self.Hstate, self.r_acc_B1, self.r_acc_B2, self.r_acc_B3, self.Mobility}"
 
 class BProfile:
     def __init__(self, id, glob_id, b_type, IC_thr, inv_a, CAP_incr, p_risc):
