@@ -321,6 +321,7 @@ class VariablesGUI:
                self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
                self.update_board()
             else:
+                # zmieniam wartośc dla testu
                 self.variables.board_values[0][2] = 0
                 self.update_board()
             self.update_gui()
