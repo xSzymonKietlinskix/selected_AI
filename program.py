@@ -9,7 +9,7 @@ def copy_neighborhood(glob_id, CELLS_NEIGHBORS):
     for m in range(1,8):
         m_neighb_ID = CELLS_NEIGHBORS[glob_id][m]
 
-#NIE GOTOWE, powinno byc jak w folderze CA structs w pdf img001.pdf w prawym dolnym no i prawie jest tlyko gdzieś coś źle sprawdzam xD
+# NIE GOTOWE, powinno byc jak w folderze CA structs w pdf img001.pdf w prawym dolnym no i prawie jest tlyko gdzieś coś źle sprawdzam xD
 def create_cells_neighbors(m, n):
     # Tworzymy pustą macierz o wymiarach m x n
     matrix = [[-1] * 8 for _ in range(m * n)]
