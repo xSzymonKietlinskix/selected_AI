@@ -2,7 +2,7 @@ import random
 import variables
 
 
-def copy_neighborhood(glob_id, CELLS_NEIGHBORS, CA_STATES_TEMP):
+def copy_neighborhood(glob_id, variables, CELLS_NEIGHBORS, CA_STATES_TEMP):
     MY_NEIGHB = [0] * 8
     for m in range(0, 7):
         m_neighb_ID = CELLS_NEIGHBORS[glob_id][m]
@@ -200,23 +200,23 @@ def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, F
 
     if A_or_B_or_D == "B":
         code_B = int(B_PROFILE[j].type) + 2
-        i, j = divmod(new_glob_id, variables.n_colls)
-        CA_STATES_TEMP.board[i][j] = code_B
-        i_old, j_old = divmod(B_ACTIVITY[j].glob_id, variables.n_colls)
+        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id][j_id] = code_B
+        i_old, j_old = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
         CA_STATES_TEMP.board[i_old][j_old] = 0
         B_ACTIVITY[j].glob_id = new_glob_id
 
     elif A_or_B_or_D == "D":
-        i, j = divmod(new_glob_id, variables.n_colls)
-        CA_STATES_TEMP.board[i][j] = 2
-        i_old, j_old = divmod(D_ACTIVITY[j].glob_id, variables.n_colls)
+        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id][j_id] = 2
+        i_old, j_old = divmod(D_ACTIVITY[j].glob_id, int(variables.n_colls))
         CA_STATES_TEMP.board[i_old][j_old] = 0
         D_ACTIVITY[j].glob_id = new_glob_id
 
     elif A_or_B_or_D == "A":
-        i, j = divmod(new_glob_id, variables.n_colls)
-        CA_STATES_TEMP.board[i][j] = 1
-        i_old, j_old = divmod(A_ACTIVITY[j].glob_id, variables.n_colls)
+        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id][j_id] = 1
+        i_old, j_old = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
         CA_STATES_TEMP.board[i_old][j_old] = 0
         A_ACTIVITY[j].glob_id = new_glob_id
 

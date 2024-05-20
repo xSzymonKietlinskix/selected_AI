@@ -279,6 +279,7 @@ class VariablesGUI:
                 color = color_map.get(value, "white")
                 self.canvas.itemconfig(self.rectangles[row_idx][col_idx], fill=color)
         self.canvas.update_idletasks()
+       # self.right_frame.update()
 
     def create_plot(self, frame):
         if not hasattr(self, 'fig'):
@@ -331,8 +332,7 @@ class VariablesGUI:
                 self.variables.board_values, pv = iter0(self.variables)
                 self.update_board()
             if i > 0:
-                self.variables.board_values[0][2] = 0
-                main_fun(self.variables, pv)
+                self.variables.board_values = main_fun(self.variables, pv)
                 self.update_board()
             self.update_gui()
             time.sleep(1)

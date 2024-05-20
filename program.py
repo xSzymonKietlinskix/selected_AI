@@ -170,6 +170,27 @@ def iter0(variables):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 CA_STATES.board[i + 1][j + 1] = board[i][j]
+        B_PROFILE[0].glob_id = 3
+        B_PROFILE[0].type = 1
+        B_ACTIVITY[0].glob_id = 3
+        B_ACTIVITY[0].type = 1
+        B_PROFILE[1].glob_id = 6
+        B_PROFILE[1].type = 1
+        B_ACTIVITY[1].glob_id = 6
+        B_ACTIVITY[1].type = 1
+        B_PROFILE[2].glob_id = 30
+        B_PROFILE[2].type = 2
+        B_ACTIVITY[2].glob_id = 30
+        B_ACTIVITY[2].type = 2
+        B_PROFILE[3].glob_id = 33
+        B_PROFILE[3].type = 3
+        B_ACTIVITY[3].glob_id = 33
+        B_ACTIVITY[3].type = 3
+
+        D_PROFILE[0].glob_id = 11
+        D_ACTIVITY[0].glob_id = 11
+        D_PROFILE[1].glob_id = 25
+        D_ACTIVITY[1].glob_id = 25
     else:
         functions.create_rand_CA_STATES(variables, CA_STATES, CA_ACTIVE_ABS, A_PROFILE, A_ACTIVITY, B_PROFILE, B_ACTIVITY, D_PROFILE,
                           D_ACTIVITY)
