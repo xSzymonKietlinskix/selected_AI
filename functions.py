@@ -113,4 +113,40 @@ def create_rand_CA_STATES(variables, CA_STATES,
 # inicjacja niewiadomej listy
 
 
-# def find_free_space_neigh(j, free_space, cr_free_space, FREE_SPACE_LOC):
+def find_free_space_neigh(j, free_space, MY_NEIGHB, CELLS_NEIGHBORS):
+    real_free_space = False
+    FREE_SPACE_LOC = [0] * 8
+    cr_free_space = 0
+    for m in range(0, 7):
+        if MY_NEIGHB[m] == 0:
+            real_free_space = True
+            cr_free_space += 1
+            FREE_SPACE_LOC[cr_free_space] = CELLS_NEIGHBORS[j][m]
+    free_space = real_free_space
+    return FREE_SPACE_LOC
+
+
+def move_to_free_ca_state(variables, CA_STATES_TEMP, B_PROFILE, A_PROFILE, B_ACTIVITY, A_ACTIVITY):
+    CA_free_loc_found = False
+
+    while not CA_free_loc_found:
+        free_glob_id = random.randint(1, int(variables.m_rows) * int(variables.n_colls))
+        i, j = divmod(free_glob_id, int(variables.n_colls))
+        if CA_STATES_TEMP.board[i][j] == 0:
+            CA_free_loc_found = True
+            if B_PROFILE[j].type == 1:
+                code_B = 3
+            elif B_PROFILE[j].type == 2:
+                code_B = 4
+            else: code_B = 5
+            CA_STATES_TEMP[i][j] = code_B
+            i_id, j_id = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
+            CA_STATES_TEMP[i_id][j_id] = 0
+            B_ACTIVITY[j].glob_id = free_glob_id
+            B_ACTIVITY[j].crB_of_emerg_hops += 1
+
+            CA_STATES_TEMP[i][j] = 1
+            i_id, j_id = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
+            CA_STATES_TEMP[i_id][j_id] = 0
+            A_ACTIVITY[j].glob_id = free_glob_id
+            A_ACTIVITY[j].pos_changed = 1
