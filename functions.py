@@ -150,3 +150,64 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, B_PROFILE, A_PROFILE, B_ACT
             CA_STATES_TEMP[i_id][j_id] = 0
             A_ACTIVITY[j].glob_id = free_glob_id
             A_ACTIVITY[j].pos_changed = 1
+
+
+def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, FREE_SPACE_LOC, A_or_B_or_D, CA_STATES_TEMP, A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
+    if variables.debug is True:
+        x = RAND_NUM[debug_pointer]
+        if debug_pointer == 50:
+            debug_pointer = 1
+        else:
+            debug_pointer += 1
+    else
+        x = random.random()
+
+    del_x = 1.0/cr_free_space
+
+    if x <= del_x:
+        new_glob_id = FREE_SPACE_LOC[0]
+
+    elif x <= 2*del_x:
+        new_glob_id = FREE_SPACE_LOC[1]
+
+    elif x <= 3*del_x:
+        new_glob_id = FREE_SPACE_LOC[2]
+
+    elif x <= 4*del_x:
+        new_glob_id = FREE_SPACE_LOC[3]
+
+    elif x <= 5*del_x:
+        new_glob_id = FREE_SPACE_LOC[4]
+
+    elif x <= 6*del_x:
+        new_glob_id = FREE_SPACE_LOC[5]
+
+    elif x <= 7*del_x:
+        new_glob_id = FREE_SPACE_LOC[6]
+
+    else:
+        new_glob_id = FREE_SPACE_LOC[7]
+
+    if A_or_B_or_D == "B":
+        code_B = int(B_PROFILE[j].type) + 2
+        i, j = divmod(new_glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i][j] = code_B
+        i_old, j_old = divmod(B_ACTIVITY[j].glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i_old][j_old] = 0
+        B_ACTIVITY[j].glob_id = new_glob_id
+
+    elif A_or_B_or_D == "D":
+        i, j = divmod(new_glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i][j] = 2
+        i_old, j_old = divmod(D_ACTIVITY[j].glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i_old][j_old] = 0
+        D_ACTIVITY[j].glob_id = new_glob_id
+
+    elif A_or_B_or_D == "A":
+        i, j = divmod(new_glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i][j] = 1
+        i_old, j_old = divmod(A_ACTIVITY[j].glob_id, variables.n_colls)
+        CA_STATES_TEMP.board[i_old][j_old] = 0
+        A_ACTIVITY[j].glob_id = new_glob_id
+
+
