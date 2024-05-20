@@ -335,7 +335,7 @@ class VariablesGUI:
                 self.variables.board_values = main_fun(self.variables, pv)
                 self.update_board()
             self.update_gui()
-            time.sleep(1)
+            time.sleep(0.5)
 
 
 

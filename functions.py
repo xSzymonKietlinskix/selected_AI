@@ -4,13 +4,14 @@ import variables
 
 def copy_neighborhood(glob_id, variables, CELLS_NEIGHBORS, CA_STATES_TEMP):
     MY_NEIGHB = [0] * 8
-    for m in range(0, 7):
-        m_neighb_ID = CELLS_NEIGHBORS[glob_id][m]
+    for m in range(0, 8):
+        m_neighb_ID = CELLS_NEIGHBORS[glob_id-1][m]
         if m_neighb_ID == -1:
             MY_NEIGHB[m] = -1
         else:
-            i,j = divmod(m_neighb_ID, int(variables.n_colls))
-            MY_NEIGHB[m] = CA_STATES_TEMP.board[i][j]
+            i,j = divmod(m_neighb_ID -1, int(variables.n_colls))
+            CA_states_tempp = [row[1:] for row in CA_STATES_TEMP.board[1:]]
+            MY_NEIGHB[m] = CA_states_tempp[i][j]
     return MY_NEIGHB
 
 def create_cells_neighbors(m, n):
@@ -118,11 +119,11 @@ def find_free_space_neigh(j, MY_NEIGHB, CELLS_NEIGHBORS):
     real_free_space = False
     FREE_SPACE_LOC = [0] * 8
     cr_free_space = 0
-    for m in range(0, 7):
+    for m in range(0, 8):
         if MY_NEIGHB[m] == 0:
             real_free_space = True
-            cr_free_space += 1
             FREE_SPACE_LOC[cr_free_space] = CELLS_NEIGHBORS[j][m]
+            cr_free_space += 1
     free_space = real_free_space
     return FREE_SPACE_LOC, free_space, cr_free_space
 
@@ -132,8 +133,8 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = No
 
     while not CA_free_loc_found:
         free_glob_id = random.randint(1, int(variables.m_rows) * int(variables.n_colls))
-        i, j = divmod(free_glob_id, int(variables.n_colls))
-        if CA_STATES_TEMP.board[i][j] == 0:
+        i, j = divmod(free_glob_id -1, int(variables.n_colls))
+        if CA_STATES_TEMP.board[i + 1][j + 1] == 0:
             CA_free_loc_found = True
             if A_or_B_or_D == "B":
                 if B_PROFILE[j].type == 1:
@@ -141,23 +142,23 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = No
                 elif B_PROFILE[j].type == 2:
                     code_B = 4
                 else: code_B = 5
-                CA_STATES_TEMP[i][j] = code_B
-                i_id, j_id = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
-                CA_STATES_TEMP[i_id][j_id] = 0
+                CA_STATES_TEMP.board[i + 1][j + 1] = code_B
+                i_id, j_id = divmod(B_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+                CA_STATES_TEMP[i_id + 1][j_id + 1] = 0
                 B_ACTIVITY[j].glob_id = free_glob_id
                 B_ACTIVITY[j].crB_of_emerg_hops += 1
 
             elif A_or_B_or_D == "A":
-                CA_STATES_TEMP[i][j] = 1
-                i_id, j_id = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
-                CA_STATES_TEMP[i_id][j_id] = 0
+                CA_STATES_TEMP.board[i + 1][j + 1] = 1
+                i_id, j_id = divmod(A_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+                CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
                 A_ACTIVITY[j].glob_id = free_glob_id
                 A_ACTIVITY[j].pos_changed = 1
 
             elif A_or_B_or_D == "D":
-                CA_STATES_TEMP[i][j] = 2
-                i_id, j_id = divmod(D_ACTIVITY[j].glob_id, int(variables.n_colls))
-                CA_STATES_TEMP[i_id][j_id] = 0
+                CA_STATES_TEMP.board[i+1][j+1] = 2
+                i_id, j_id = divmod(D_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+                CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
                 D_ACTIVITY[j].glob_id = free_glob_id
                 D_ACTIVITY[j].crD_of_emerg_hops += 1
 
@@ -200,24 +201,24 @@ def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, F
 
     if A_or_B_or_D == "B":
         code_B = int(B_PROFILE[j].type) + 2
-        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_id][j_id] = code_B
-        i_old, j_old = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_old][j_old] = 0
+        i_id, j_id = divmod(new_glob_id - 1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id + 1][j_id + 1] = code_B
+        i_old, j_old = divmod(B_ACTIVITY[j].glob_id - 1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_old + 1][j_old + 1] = 0
         B_ACTIVITY[j].glob_id = new_glob_id
 
     elif A_or_B_or_D == "D":
-        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_id][j_id] = 2
-        i_old, j_old = divmod(D_ACTIVITY[j].glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_old][j_old] = 0
+        i_id, j_id = divmod(new_glob_id -1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 2
+        i_old, j_old = divmod(D_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_old + 1][j_old + 1] = 0
         D_ACTIVITY[j].glob_id = new_glob_id
 
     elif A_or_B_or_D == "A":
-        i_id, j_id = divmod(new_glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_id][j_id] = 1
-        i_old, j_old = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
-        CA_STATES_TEMP.board[i_old][j_old] = 0
+        i_id, j_id = divmod(new_glob_id - 1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 1
+        i_old, j_old = divmod(A_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+        CA_STATES_TEMP.board[i_old + 1][j_old + 1] = 0
         A_ACTIVITY[j].glob_id = new_glob_id
 
 
