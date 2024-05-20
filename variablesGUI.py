@@ -4,8 +4,9 @@ import program
 from variables import Variables
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-from program import iter0
+from program import iter0, ProgramVar
 import time
+from main import main_fun
 
 class VariablesGUI:
     def __init__(self, master):
@@ -327,9 +328,11 @@ class VariablesGUI:
             if i == 0:
                 if self.canvas is None:
                     self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
-                iter0(self.variables)
+                self.variables.board_values, pv = iter0(self.variables)
+                self.update_board()
             if i > 0:
                 self.variables.board_values[0][2] = 0
+                main_fun(self.variables, pv)
                 self.update_board()
             self.update_gui()
             time.sleep(1)

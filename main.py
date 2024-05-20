@@ -1,4 +1,4 @@
-def main(variables):
+def main_fun(variables, pv):
     for iter in range(int(variables.n_of_iter)):
         for i in range(int(variables.n_of_A)):
             print("To be done!")

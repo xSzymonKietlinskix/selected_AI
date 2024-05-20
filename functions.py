@@ -1,6 +1,7 @@
 import random
 import variables
 
+
 def copy_neighborhood(glob_id, CELLS_NEIGHBORS, CA_STATES_TEMP):
     MY_NEIGHB = [0] * 8
     for m in range(0, 7):
@@ -159,7 +160,7 @@ def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, F
             debug_pointer = 1
         else:
             debug_pointer += 1
-    else
+    else:
         x = random.random()
 
     del_x = 1.0/cr_free_space

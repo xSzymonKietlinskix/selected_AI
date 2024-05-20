@@ -4,9 +4,26 @@ from variables import Variables
 import dataStructures
 import functions
 
-# NIE GOTOWE
 
-# losowanie z gaussa
+class ProgramVar:
+    def __init__(self):
+        self.A_PROFILE = []
+        self.B_PROFILE = []
+        self.D_PROFILE = []
+        self.A_ACTIVITY = []
+        self.B_ACTIVITY = []
+        self.D_ACTIVITY = []
+        self.CA_STATES = []
+        self.my_neighb = []
+        self.A_star = []
+        self.RAND_NUM = []
+        self.CA_ACTIVE_ABS = []
+        self.free_space_loc = []
+        self.ca_states_temp = []
+        self.cells_neighbors = []
+        self.debug_pointer = 1
+        self.prob_to_be_ill = []
+
 def gauss_int(min_value, max_value):
     mean = (max_value + min_value) / 2.0
     std_dev = (max_value - min_value) / 4.0  # Adjust this value as needed
@@ -170,5 +187,23 @@ def iter0(variables):
 
     # results =
 
-    return CA_STATES_display
+    pv = ProgramVar()
+    pv.A_PROFILE = A_PROFILE
+    pv.B_PROFILE = B_PROFILE
+    pv.D_PROFILE = D_PROFILE
+    pv.A_ACTIVITY = A_ACTIVITY
+    pv.B_ACTIVITY = B_ACTIVITY
+    pv.D_ACTIVITY = D_ACTIVITY
+    pv.CA_STATES = CA_STATES
+    pv.my_neighb = MY_NEIGHB
+    pv.A_star = A_star
+    pv.RAND_NUM = RAND_NUM
+    pv.CA_ACTIVE_ABS = CA_ACTIVE_ABS
+    pv.free_space_loc = FREE_SPACE_LOC
+    pv.ca_states_temp = CA_STATES_TEMP
+    pv.cells_neighbors = CELLS_NEIGHBORS
+    pv.debug_pointer = debug_pointer
+    pv.prob_to_be_ill = Prob_to_be_ill
+
+    return CA_STATES_display, pv
 
