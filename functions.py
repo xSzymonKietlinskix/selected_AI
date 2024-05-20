@@ -114,7 +114,7 @@ def create_rand_CA_STATES(variables, CA_STATES,
 # inicjacja niewiadomej listy
 
 
-def find_free_space_neigh(j, free_space, MY_NEIGHB, CELLS_NEIGHBORS):
+def find_free_space_neigh(j, MY_NEIGHB, CELLS_NEIGHBORS):
     real_free_space = False
     FREE_SPACE_LOC = [0] * 8
     cr_free_space = 0
@@ -124,10 +124,10 @@ def find_free_space_neigh(j, free_space, MY_NEIGHB, CELLS_NEIGHBORS):
             cr_free_space += 1
             FREE_SPACE_LOC[cr_free_space] = CELLS_NEIGHBORS[j][m]
     free_space = real_free_space
-    return FREE_SPACE_LOC
+    return FREE_SPACE_LOC, free_space, cr_free_space
 
 
-def move_to_free_ca_state(variables, CA_STATES_TEMP, B_PROFILE, A_PROFILE, B_ACTIVITY, A_ACTIVITY):
+def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
     CA_free_loc_found = False
 
     while not CA_free_loc_found:
@@ -135,22 +135,31 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, B_PROFILE, A_PROFILE, B_ACT
         i, j = divmod(free_glob_id, int(variables.n_colls))
         if CA_STATES_TEMP.board[i][j] == 0:
             CA_free_loc_found = True
-            if B_PROFILE[j].type == 1:
-                code_B = 3
-            elif B_PROFILE[j].type == 2:
-                code_B = 4
-            else: code_B = 5
-            CA_STATES_TEMP[i][j] = code_B
-            i_id, j_id = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
-            CA_STATES_TEMP[i_id][j_id] = 0
-            B_ACTIVITY[j].glob_id = free_glob_id
-            B_ACTIVITY[j].crB_of_emerg_hops += 1
+            if A_or_B_or_D == "B":
+                if B_PROFILE[j].type == 1:
+                    code_B = 3
+                elif B_PROFILE[j].type == 2:
+                    code_B = 4
+                else: code_B = 5
+                CA_STATES_TEMP[i][j] = code_B
+                i_id, j_id = divmod(B_ACTIVITY[j].glob_id, int(variables.n_colls))
+                CA_STATES_TEMP[i_id][j_id] = 0
+                B_ACTIVITY[j].glob_id = free_glob_id
+                B_ACTIVITY[j].crB_of_emerg_hops += 1
 
-            CA_STATES_TEMP[i][j] = 1
-            i_id, j_id = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
-            CA_STATES_TEMP[i_id][j_id] = 0
-            A_ACTIVITY[j].glob_id = free_glob_id
-            A_ACTIVITY[j].pos_changed = 1
+            elif A_or_B_or_D == "A":
+                CA_STATES_TEMP[i][j] = 1
+                i_id, j_id = divmod(A_ACTIVITY[j].glob_id, int(variables.n_colls))
+                CA_STATES_TEMP[i_id][j_id] = 0
+                A_ACTIVITY[j].glob_id = free_glob_id
+                A_ACTIVITY[j].pos_changed = 1
+
+            elif A_or_B_or_D == "D":
+                CA_STATES_TEMP[i][j] = 2
+                i_id, j_id = divmod(D_ACTIVITY[j].glob_id, int(variables.n_colls))
+                CA_STATES_TEMP[i_id][j_id] = 0
+                D_ACTIVITY[j].glob_id = free_glob_id
+                D_ACTIVITY[j].crD_of_emerg_hops += 1
 
 
 def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, FREE_SPACE_LOC, A_or_B_or_D, CA_STATES_TEMP, A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
