@@ -2,66 +2,28 @@ import random
 import pandas as pd
 from variables import Variables
 import dataStructures
+import functions
 
 
-# NIE GOTOWE
-def copy_neighborhood(glob_id, CELLS_NEIGHBORS):
-    for m in range(1,8):
-        m_neighb_ID = CELLS_NEIGHBORS[glob_id][m]
+class ProgramVar:
+    def __init__(self):
+        self.A_PROFILE = []
+        self.B_PROFILE = []
+        self.D_PROFILE = []
+        self.A_ACTIVITY = []
+        self.B_ACTIVITY = []
+        self.D_ACTIVITY = []
+        self.CA_STATES = []
+        self.my_neighb = []
+        self.A_star = []
+        self.RAND_NUM = []
+        self.CA_ACTIVE_ABS = []
+        self.free_space_loc = []
+        self.ca_states_temp = []
+        self.cells_neighbors = []
+        self.debug_pointer = 1
+        self.prob_to_be_ill = []
 
-#NIE GOTOWE, powinno byc jak w folderze CA structs w pdf img001.pdf w prawym dolnym no i prawie jest tlyko gdzieś coś źle sprawdzam xD
-def create_cells_neighbors(m, n):
-    # Tworzymy pustą macierz o wymiarach m x n
-    matrix = [[-1] * 8 for _ in range(m * n)]
-
-    # Funkcja zwracająca sąsiadów danego punktu
-    def get_neighbors(point, m, n):
-        neighbors = []
-        i, j = divmod(point, n)  # Obliczamy indeksy wiersza i kolumny dla danego punktu
-        # Sprawdzamy sąsiadów wokół danego punktu, zaczynając od sąsiada powyżej i z lewej strony
-        if i-1 > 0:
-            neighbors.append((i-1) * n + j)
-        else:
-            neighbors.append(-2)
-        if i-1 > 0 and j + 1 <= n:
-            neighbors.append((i - 1) * n + j + 1)
-        else:
-            neighbors.append(-2)
-        if j + 1 <= n:
-            neighbors.append((i) * n + j + 1)
-        else:
-            neighbors.append(-2)
-        if i+1 <= m and j+1 <= n:
-            neighbors.append((i+1) * n + j + 1)
-        else:
-            neighbors.append(-2)
-        if i+1 <= m:
-            neighbors.append((i+1) * n + j)
-        else:
-            neighbors.append(-2)
-        if i+1 <= m and j-1 >= 0:
-            neighbors.append((i + 1) * n + j - 1)
-        else:
-            neighbors.append(-2)
-        if j-1 >= 0:
-            neighbors.append((i) * n + j - 1)
-        else:
-            neighbors.append(-2)
-        if i+1 <= m and j-1 >= 0:
-            neighbors.append((i - 1) * n + j - 1)
-        else:
-            neighbors.append(-2)
-        return neighbors
-
-
-    # Wypełniamy macierz sąsiadami dla każdego punktu
-    for point in range(m * n):
-        neighbors = get_neighbors(point, m, n)
-        for idx, neighbor in enumerate(neighbors):
-            matrix[point][idx] = neighbor + 1
-
-    return matrix
-# losowanie z gaussa
 def gauss_int(min_value, max_value):
     mean = (max_value + min_value) / 2.0
     std_dev = (max_value - min_value) / 4.0  # Adjust this value as needed
@@ -116,68 +78,7 @@ def create_D_profile(variables, D_PROFILE):
         D_PROFILE.append(dis)
 
 # Tworzenie tablicy CA
-def create_rand_CA_STATES(variables, CA_STATES,
-                          CA_ACTIVE_ABS, A_PROFILE, A_ACTIVITY,
-                          B_PROFILE, B_ACTIVITY, D_PROFILE, D_ACTIVITY):
-    # create agents Ai in CA_STATES
-    for i in range(0, int(variables.n_of_A)):
-        i_ID = random.randint(1, int(variables.m_rows))
-        j_ID = random.randint(1, int(variables.n_colls))
-        while CA_STATES.board[i_ID][j_ID] != 0:
-            i_ID = random.randint(1, int(variables.m_rows))
-            j_ID = random.randint(1, int(variables.n_colls))
 
-        CA_STATES.board[i_ID][j_ID] = 1
-        glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
-        A_PROFILE[i].glob_id = glob_ID
-        A_ACTIVITY[i].glob_id = glob_ID
-
-    # create business Aj
-    for j in range(0, int(variables.n_of_B)):
-        i_ID = random.randint(1, int(variables.m_rows))
-        j_ID = random.randint(1, int(variables.n_colls))
-        while CA_STATES.board[i_ID][j_ID] != 0:
-            i_ID = random.randint(1, int(variables.m_rows))
-            j_ID = random.randint(1, int(variables.n_colls))
-
-        numbers = [1, 2, 3]
-        probabilities = [float(variables.B1_p_avoid), float(variables.B2_p_avoid), float(variables.B3_p_avoid)]
-        x = random.choices(numbers, weights=probabilities, k=1)[0]
-        if x == 1:
-            CA_STATES.board[i_ID][j_ID] = 3
-            glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
-            B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].type = 3
-            B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].type = 3
-        elif x == 2:
-            CA_STATES.board[i_ID][j_ID] = 4
-            glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
-            B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].type = 4
-            B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].type = 4
-        elif x == 3:
-            CA_STATES.board[i_ID][j_ID] = 5
-            glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
-            B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].type = 5
-            B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].type = 5
-    # create decrease Dk
-    for k in range(0, int(variables.n_of_D)):
-        i_ID = random.randint(1, int(variables.m_rows))
-        j_ID = random.randint(1, int(variables.n_colls))
-        while CA_STATES.board[i_ID][j_ID] != 0:
-            i_ID = random.randint(1, int(variables.m_rows))
-            j_ID = random.randint(1, int(variables.n_colls))
-
-        CA_STATES.board[i_ID][j_ID] = 2
-        glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
-        D_PROFILE[k].glob_id = glob_ID
-        D_ACTIVITY[k].glob_id = glob_ID
-
-# inicjacja niewiadomej listy
 def set_prob_to_be_ill(variables):
     prob_to_be_ill = []
     prob_to_be_ill.append(variables.p_HS1)
@@ -197,7 +98,6 @@ def iter0(variables):
 
     MY_NEIGHB = [0] * 8
     # CELLS_NEIGHBORS = [[0] * 8 for _ in range(int(variables.m_rows) * int(variables.n_colls))]
-    CA_STATES_TEMP = CA_STATES 
     Prob_to_be_ill = [0] * 3
 
     # Inicjacja pustej listy historii
@@ -270,13 +170,34 @@ def iter0(variables):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 CA_STATES.board[i + 1][j + 1] = board[i][j]
+        B_PROFILE[0].glob_id = 3
+        B_PROFILE[0].type = 1
+        B_ACTIVITY[0].glob_id = 3
+        B_ACTIVITY[0].type = 1
+        B_PROFILE[1].glob_id = 6
+        B_PROFILE[1].type = 1
+        B_ACTIVITY[1].glob_id = 6
+        B_ACTIVITY[1].type = 1
+        B_PROFILE[2].glob_id = 30
+        B_PROFILE[2].type = 2
+        B_ACTIVITY[2].glob_id = 30
+        B_ACTIVITY[2].type = 2
+        B_PROFILE[3].glob_id = 33
+        B_PROFILE[3].type = 3
+        B_ACTIVITY[3].glob_id = 33
+        B_ACTIVITY[3].type = 3
+
+        D_PROFILE[0].glob_id = 11
+        D_ACTIVITY[0].glob_id = 11
+        D_PROFILE[1].glob_id = 25
+        D_ACTIVITY[1].glob_id = 25
     else:
-        create_rand_CA_STATES(variables, CA_STATES, CA_ACTIVE_ABS, A_PROFILE, A_ACTIVITY, B_PROFILE, B_ACTIVITY, D_PROFILE,
+        functions.create_rand_CA_STATES(variables, CA_STATES, CA_ACTIVE_ABS, A_PROFILE, A_ACTIVITY, B_PROFILE, B_ACTIVITY, D_PROFILE,
                           D_ACTIVITY)
 
+    CA_STATES_TEMP = CA_STATES
 
-    CELLS_NEIGHBORS = create_cells_neighbors(int(variables.m_rows), int(variables.n_colls))
-    print(CELLS_NEIGHBORS)
+    CELLS_NEIGHBORS = functions.create_cells_neighbors(int(variables.m_rows), int(variables.n_colls))
     Prob_to_be_ill = set_prob_to_be_ill(variables)
 
     A_star.append(A_ACTIVITY)
@@ -284,5 +205,26 @@ def iter0(variables):
     debug_pointer = 1
     # plansza bez pierwszego wiersza i pierwszej kolumny, do wyświetlania w GUI
     CA_STATES_display = [row[1:] for row in CA_STATES.board[1:]]
-    return CA_STATES_display
+
+    # results =
+
+    pv = ProgramVar()
+    pv.A_PROFILE = A_PROFILE
+    pv.B_PROFILE = B_PROFILE
+    pv.D_PROFILE = D_PROFILE
+    pv.A_ACTIVITY = A_ACTIVITY
+    pv.B_ACTIVITY = B_ACTIVITY
+    pv.D_ACTIVITY = D_ACTIVITY
+    pv.CA_STATES = CA_STATES
+    pv.my_neighb = MY_NEIGHB
+    pv.A_star = A_star
+    pv.RAND_NUM = RAND_NUM
+    pv.CA_ACTIVE_ABS = CA_ACTIVE_ABS
+    pv.free_space_loc = FREE_SPACE_LOC
+    pv.ca_states_temp = CA_STATES_TEMP
+    pv.cells_neighbors = CELLS_NEIGHBORS
+    pv.debug_pointer = debug_pointer
+    pv.prob_to_be_ill = Prob_to_be_ill
+
+    return CA_STATES_display, pv
 

@@ -4,8 +4,9 @@ import program
 from variables import Variables
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-from program import iter0
+from program import iter0, ProgramVar
 import time
+from main import main_fun
 
 class VariablesGUI:
     def __init__(self, master):
@@ -261,6 +262,7 @@ class VariablesGUI:
             self.rectangles.append(row_rectangles)
 
         self.canvas.config(width=board_width, height=board_height)
+        self.canvas.update_idletasks()
 
     def update_board(self):
         color_map = {
@@ -276,19 +278,21 @@ class VariablesGUI:
             for col_idx, value in enumerate(row):
                 color = color_map.get(value, "white")
                 self.canvas.itemconfig(self.rectangles[row_idx][col_idx], fill=color)
+        self.canvas.update_idletasks()
+       # self.right_frame.update()
 
     def create_plot(self, frame):
-        # Create a new matplotlib figure and axes
-        fig = Figure(figsize=(4, 2))
-        ax = fig.add_subplot(111)
+        if not hasattr(self, 'fig'):
+            self.fig = Figure(figsize=(4, 2))
+            self.ax = self.fig.add_subplot(111)
+            self.matplotlib_canvas = FigureCanvasTkAgg(self.fig, master=frame)
+            self.matplotlib_canvas.get_tk_widget().pack(side=BOTTOM)
+        else:
+            self.ax.clear()  # Clear the existing plot
 
-        # Create a new matplotlib canvas and add it to the frame
-        canvas = FigureCanvasTkAgg(fig, master=frame)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=BOTTOM)
-
-        # Plot some data
-        ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+        # Plot some data (this can be updated to reflect new data)
+        self.ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+        self.matplotlib_canvas.draw()
 
     def update_gui(self):
         self.root.update_idletasks()
@@ -311,19 +315,27 @@ class VariablesGUI:
         if len(self.variables.board_values) != int(self.variables.m_rows) or len(self.variables.board_values[0]) != int(self.variables.n_colls):
             self.variables.board_values = [[0] * int(self.variables.n_colls) for _ in range(int(self.variables.m_rows))]
 
+        if not hasattr(self, 'matplotlib_canvas'):
+            self.create_plot(self.right_frame)
+        if self.canvas is None:
+            self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
+        else:
+            self.canvas.delete("all")
+            self.canvas.destroy()
+            self.canvas = None
+
         for i in range(0, int(self.variables.n_of_iter)):
             print("Iteracja: ", i)
             if i == 0:
-               self.variables.board_values = program.iter0(self.variables)
-               self.create_plot(self.right_frame)
-               self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
-               self.update_board()
-            else:
-                # zmieniam wartośc dla testu
-                self.variables.board_values[0][2] = 0
+                if self.canvas is None:
+                    self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
+                self.variables.board_values, pv = iter0(self.variables)
+                self.update_board()
+            if i > 0:
+                self.variables.board_values = main_fun(self.variables, pv)
                 self.update_board()
             self.update_gui()
-            time.sleep(1)
+            time.sleep(0.5)
 
 
 
