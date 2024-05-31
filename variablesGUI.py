@@ -332,7 +332,7 @@ class VariablesGUI:
                 self.variables.board_values, pv = iter0(self.variables)
                 self.update_board()
             if i > 0:
-                self.variables.board_values = main_fun(self.variables, pv)
+                self.variables.board_values, self.variables, pv = main_fun(self.variables, pv, i)
                 self.update_board()
             self.update_gui()
             time.sleep(0.5)
