@@ -41,7 +41,8 @@ class DProfile:
         self.glob_id = glob_id
 
 class AActivity:
-    def __init__(self, id, glob_id, pos_changed, curr_cap, cap_increased, increase_reason, cap_decreased, decrease_reason, d_susp_buisness, crA_of_emerg_hops):
+    def __init__(self, id, glob_id, pos_changed, curr_cap, cap_increased, increase_reason, cap_decreased, decrease_reason, cap_not_changed,  d_susp_buisness, crA_of_emerg_hops):
+        self.cap_not_changed = cap_not_changed
         self.pos_changed = pos_changed
         self.curr_cap = curr_cap
         self.cap_increased = cap_increased

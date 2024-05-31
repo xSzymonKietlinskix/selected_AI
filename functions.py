@@ -153,6 +153,7 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = No
                 i_id, j_id = divmod(A_ACTIVITY[j].glob_id -1, int(variables.n_colls))
                 CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
                 A_ACTIVITY[j].glob_id = free_glob_id
+                A_ACTIVITY[j].crA_of_emerg_hops += 1
                 A_ACTIVITY[j].pos_changed = 1
 
             elif A_or_B_or_D == "D":

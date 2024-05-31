@@ -150,7 +150,7 @@ def iter0(variables):
 
     # inicjacja pustych A,B,D activity
     for i in range(len(A_PROFILE)):
-        activity = dataStructures.AActivity(i, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        activity = dataStructures.AActivity(i, 0, 0, 0, 0, 0, 0, 0,  0, 0,0)
         A_ACTIVITY.append(activity)
 
     for i in range(len(B_PROFILE)):
