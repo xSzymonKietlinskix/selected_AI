@@ -150,15 +150,15 @@ def iter0(variables):
 
     # inicjacja pustych A,B,D activity
     for i in range(len(A_PROFILE)):
-        activity = dataStructures.AActivity(i, 0, 0, 0, 0, 0, 0, 0,  0, 0,0)
+        activity = dataStructures.AActivity(i, A_PROFILE[i].glob_id, 0, float(variables.init_capitIC), 0, 0, 0, 0,  0, 0,0)
         A_ACTIVITY.append(activity)
 
     for i in range(len(B_PROFILE)):
-        activity = dataStructures.BActivity(i, 0, 0, 0)
+        activity = dataStructures.BActivity(i, B_PROFILE[i].glob_id, B_PROFILE[i].b_type , 0)
         B_ACTIVITY.append(activity)
 
     for i in range(len(D_PROFILE)):
-        activity = dataStructures.DActivity(i, 0, 0)
+        activity = dataStructures.DActivity(i, D_PROFILE[i].glob_id, 0)
         D_ACTIVITY.append(activity)
 
     if variables.debug is True and variables.read_CA_states is True:
@@ -171,19 +171,19 @@ def iter0(variables):
             for j in range(len(board[i])):
                 CA_STATES.board[i + 1][j + 1] = board[i][j]
         B_PROFILE[0].glob_id = 3
-        B_PROFILE[0].type = 1
+        B_PROFILE[0].b_type = 1
         B_ACTIVITY[0].glob_id = 3
         B_ACTIVITY[0].type = 1
         B_PROFILE[1].glob_id = 6
-        B_PROFILE[1].type = 1
+        B_PROFILE[1].b_type = 1
         B_ACTIVITY[1].glob_id = 6
         B_ACTIVITY[1].type = 1
         B_PROFILE[2].glob_id = 30
-        B_PROFILE[2].type = 2
+        B_PROFILE[2].b_type = 2
         B_ACTIVITY[2].glob_id = 30
         B_ACTIVITY[2].type = 2
         B_PROFILE[3].glob_id = 33
-        B_PROFILE[3].type = 3
+        B_PROFILE[3].b_type = 3
         B_ACTIVITY[3].glob_id = 33
         B_ACTIVITY[3].type = 3
 
