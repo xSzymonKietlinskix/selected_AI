@@ -273,19 +273,32 @@ class VariablesGUI:
         self.canvas.config(width=board_width, height=board_height)
         self.canvas.update_idletasks()
 
-    def update_board(self):
+    def update_board(self, pv):
         color_map = {
             0: "white",
             1: "yellow",
             2: "plum",
             3: "#87ceeb",
             4: "#0000cd",
-            5: "#4169e1"
+            5: "#4169e1",
+            6: "orange",
+            7: "red"
         }
         # Update the color of each rectangle
         for row_idx, row in enumerate(self.variables.board_values):
             for col_idx, value in enumerate(row):
-                color = color_map.get(value, "white")
+                if value == 1:
+                    for a in pv.A_ACTIVITY:
+                        i_id, j_id = divmod(int(a.glob_id) - 1, int(self.variables.n_colls))
+                        if i_id == row_idx and j_id == col_idx:
+                            if float(a.curr_cap) >= float(self.variables.rich):
+                                color = "red"
+                            elif float(a.curr_cap) >= float(self.variables.fax):
+                                color = "orange"
+                            else:
+                                color = "yellow"
+                else:
+                    color = color_map.get(value, "white")
                 self.canvas.itemconfig(self.rectangles[row_idx][col_idx], fill=color)
         self.canvas.update_idletasks()
        # self.right_frame.update()
@@ -339,10 +352,10 @@ class VariablesGUI:
                 if self.canvas is None:
                     self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
                 self.variables.board_values, pv = iter0(self.variables)
-                self.update_board()
+                self.update_board(pv)
             if i > 0:
                 self.variables.board_values, self.variables, pv = main_fun(self.variables, pv, i)
-                self.update_board()
+                self.update_board(pv)
             self.update_gui()
             time.sleep(0.5)
 
