@@ -27,7 +27,7 @@ class AProfile:
 
 class BProfile:
     def __init__(self, id, glob_id, b_type, IC_thr, inv_a, CAP_incr, p_risc):
-        self.type = b_type
+        self.b_type = b_type
         self.IC_thr = IC_thr
         self.inv_a = inv_a
         self.CAP_incr = CAP_incr
