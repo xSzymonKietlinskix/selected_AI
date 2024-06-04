@@ -201,11 +201,20 @@ class VariablesGUI:
             if i >= 42:
                 self.create_entry(r, c, var_name)
                 c += 2
-            if i == 46:
+            if i == 44:
                 r += 1
                 c = 0
-            if i == 51:
+            if i == 47:
                 r += 1
+                c = 0
+            if i == 50:
+                r += 1
+                c = 0
+            if i == 52:
+                r+=1
+                c=0
+            if i == 54:
+                r+= 1
                 c = 0
             if i == 56:
                 break
