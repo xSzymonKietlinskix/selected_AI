@@ -52,16 +52,16 @@ class Variables:
         self.B1_ICthr = 0
         self.B1_inv_a = 0
         self.B1_gap = 0
-        self.B1_p_risc = 0
-        self.B1_p_avoid = 0
         self.B2_ICthr = 0
         self.B2_inv_a = 0
         self.B2_gap = 0
-        self.B2_p_risc = 0
-        self.B2_p_avoid = 0
         self.B3_ICthr = 0
         self.B3_inv_a = 0
         self.B3_gap = 0
+        self.B1_p_risc = 0
+        self.B1_p_avoid = 0
+        self.B2_p_risc = 0
+        self.B2_p_avoid = 0
         self.B3_p_risc = 0
         self.B3_p_avoid = 0
         # WEALTH THR
