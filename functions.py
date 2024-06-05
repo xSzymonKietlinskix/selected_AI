@@ -1,6 +1,6 @@
 import random
 import variables
-
+import pandas as pd
 
 def copy_neighborhood(glob_id, variables, CELLS_NEIGHBORS, CA_STATES_TEMP):
     MY_NEIGHB = [0] * 8
@@ -221,5 +221,108 @@ def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, F
         i_old, j_old = divmod(int(A_ACTIVITY[j].glob_id) -1, int(variables.n_colls))
         CA_STATES_TEMP.board[i_old + 1][j_old + 1] = 0
         A_ACTIVITY[j].glob_id = new_glob_id
+
+
+def print_results(variables, pv, iteration):
+
+    poorest_cap = 0
+    poorest_A_id = 0
+    poorest_glob_id = 0
+    richest_cap = 0
+    richest_A_id = 0
+    richest_glob_id = 0
+    poorest_av_cap = 0
+    fair_av_cap = 0
+    richest_av_cap = 0
+    procent_poorest = 0
+    procent_fair = 0
+    procent_richest = 0
+
+    poor = []
+    fax = []
+    rich = []
+
+    for a in pv.A_ACTIVITY:
+        if a.curr_cap >= float(variables.rich):
+            rich.append(a)
+        elif a.curr_cap <= float(variables.power):
+            poor.append(a)
+        else:
+            fax.append(a)
+
+    if len(fax) != 0:
+        sorted_fax = sorted(fax, key=lambda a: a.curr_cap)
+        fair_av_cap = sum(map(lambda x: x.curr_cap, fax)) / len(fax)
+        procent_fair = len(fax) / len(pv.A_ACTIVITY)
+
+    if len(poor) != 0:
+        sorted_poor = sorted(poor, key=lambda a: a.curr_cap)
+        poorest_cap = sorted_poor[0].curr_cap
+        poorest_A_id = sorted_poor[0].id
+        poorest_glob_id = sorted_poor[0].glob_id
+        poorest_av_cap = sum(map(lambda x: x.curr_cap, poor)) / len(poor)
+        procent_poorest = len(poor) / len(pv.A_ACTIVITY)
+
+    if len(rich) != 0:
+        sorted_rich = sorted(rich, key=lambda a: a.curr_cap, reverse=True)
+        richest_cap = sorted_rich[0].curr_cap
+        richest_A_id = sorted_rich[0].id
+        richest_glob_id = sorted_rich[0].glob_id
+        richest_av_cap = sum(map(lambda x: x.curr_cap, rich)) / len(rich)
+        procent_richest = len(rich) / len(pv.A_ACTIVITY)
+
+
+    with open('results.txt', 'a') as f:
+        print("   "+str(iteration) + "   " + str(poorest_cap) + "        " + str(poorest_A_id) + "        " + str(poorest_glob_id) +
+              "       " + str(richest_cap) + "      " + str(richest_A_id) + "       " + str(richest_glob_id) + "       " +
+              str(poorest_av_cap) + "     " +  str(fair_av_cap) + "  " + str(richest_av_cap) + "     " + str(procent_poorest) + "    " + str(procent_fair) + "    " + str(procent_richest), file=f)
+
+
+def print_debug(variables, pv, iteration):
+    with open('debug.txt', 'a') as f:
+        print("Iteration: " + str(iteration), file=f)
+        print("CA_STATES: " + str(pv.CA_STATES), file=f)
+        print("CA_ACTIVE_ABS: " + str(pv.CA_ACTIVE_ABS), file=f)
+        print("CELLS_NEIGHBOURS: " + str(pv.cells_neighbors), file=f)
+        print("A_PROFILE: ", file=f)
+        for a in pv.A_PROFILE:
+            print(a, file=f)
+        print("B_PROFILE: ", file=f)
+        for b in pv.B_PROFILE:
+            print(b, file=f)
+        print("D_PROFILE: ", file=f)
+        for d in pv.D_PROFILE:
+            print(d, file=f)
+        print("A_ACTIVITY: ", file=f)
+        for aa in pv.A_ACTIVITY:
+            print(aa, file=f)
+        print("B_ACTIVITY: ", file=f)
+        for bb in pv.B_ACTIVITY:
+            print(bb, file=f)
+        print("D_ACTIVITY: ", file=f)
+        for dd in pv.D_ACTIVITY:
+            print(dd, file=f)
+        print("Prob_to_be_ill: " + str(pv.prob_to_be_ill), file=f)
+
+def get_data_for_plot():
+    # Definicja ścieżki do pliku
+    file_path = 'results.txt'
+
+    # Wczytanie danych z pliku tekstowego, pomijając komentarze i nagłówki
+    # df = pd.read_csv(file_path, delim_whitespace=True, comment='#', skiprows=2, header=None)
+    df = pd.read_csv(file_path, sep='\s+', comment='#', skiprows=2, header=None)
+    # Nazwanie kolumn zgodnie z podanym formatem
+    columns = ['iter', 'poorest_CAP', 'A_ID', 'GLOB_ID', 'richest_CAP', 'A_ID2', 'glob_ID2', 'av_cap1', 'av_cap2',
+               'av_cap3', '%_of_poor', '%_of_fair', '%_of_rich']
+    df.columns = columns
+
+    # Wyciągnięcie kolumn 'av_cap1', 'av_cap2', 'av_cap3'
+    av_caps = df[['iter', 'av_cap1', 'av_cap2', 'av_cap3']]
+
+    # Wyświetlenie wyników
+    return av_caps
+
+
+
 
 

@@ -1,5 +1,6 @@
 from tkinter import *
 
+import functions
 import program
 from variables import Variables
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -238,7 +239,7 @@ class VariablesGUI:
         if self.canvas is not None:
             self.canvas.delete("all")
 
-        canvas_width = self.master.winfo_width() / 2
+        canvas_width = self.master.winfo_width() * 0.7
         canvas_height = self.master.winfo_height()
 
         color_map = {
@@ -303,9 +304,9 @@ class VariablesGUI:
         self.canvas.update_idletasks()
        # self.right_frame.update()
 
-    def create_plot(self, frame):
+    def create_plot(self, frame, data_for_plot):
         if not hasattr(self, 'fig'):
-            self.fig = Figure(figsize=(4, 2))
+            self.fig = Figure(figsize=(4, 3))
             self.ax = self.fig.add_subplot(111)
             self.matplotlib_canvas = FigureCanvasTkAgg(self.fig, master=frame)
             self.matplotlib_canvas.get_tk_widget().pack(side=BOTTOM)
@@ -313,8 +314,19 @@ class VariablesGUI:
             self.ax.clear()  # Clear the existing plot
 
         # Plot some data (this can be updated to reflect new data)
-        self.ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+        # self.ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+
+
+        self.ax.plot(data_for_plot['iter'], data_for_plot['av_cap1'], label='poor_av_cap', marker='o', color='b')
+        self.ax.plot(data_for_plot['iter'], data_for_plot['av_cap2'], label='fair_av_cap', marker='s', color='g')
+        self.ax.plot(data_for_plot['iter'], data_for_plot['av_cap3'], label='rich_av_cap', marker='^', color='r')
+
+        # Dodanie tytułu i etykiet osi
+        self.ax.set_xlabel('Iter')
+        self.ax.set_ylabel('av_cap')
+        self.ax.legend()
         self.matplotlib_canvas.draw()
+
 
     def update_gui(self):
         self.root.update_idletasks()
@@ -337,15 +349,6 @@ class VariablesGUI:
         if len(self.variables.board_values) != int(self.variables.m_rows) or len(self.variables.board_values[0]) != int(self.variables.n_colls):
             self.variables.board_values = [[0] * int(self.variables.n_colls) for _ in range(int(self.variables.m_rows))]
 
-        if not hasattr(self, 'matplotlib_canvas'):
-            self.create_plot(self.right_frame)
-        if self.canvas is None:
-            self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
-        else:
-            self.canvas.delete("all")
-            self.canvas.destroy()
-            self.canvas = None
-
         for i in range(0, int(self.variables.n_of_iter)):
             print("Iteracja: ", i)
             if i == 0:
@@ -353,14 +356,25 @@ class VariablesGUI:
                     self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
                 self.variables.board_values, pv = iter0(self.variables)
                 self.update_board(pv)
+                with open('results.txt', 'w') as file:
+                    file.write("# 1    2        3        4        5        6        7        8        9     10       11     12    13\n")
+                    file.write("#      poorest  poorest  poorest  richest  richest  richest  poorest  fair  richest  % of  % of  % of\n")
+                    file.write("# iter  CAP      A_ID    GLOB_ID    CAP    A_ID     glob_ID  av cap  av cap  av cap  poor  fair  rich\n")
+                with open('debug.txt', 'w') as file:
+                    file.write('')
+                functions.print_debug(self.variables, pv, i)
+                functions.print_results(self.variables, pv, i)
+                data_for_plot = functions.get_data_for_plot()
+                self.create_plot(self.right_frame, data_for_plot)
             if i > 0:
                 self.variables.board_values, self.variables, pv = main_fun(self.variables, pv, i)
                 self.update_board(pv)
+                functions.print_debug(self.variables, pv, i)
+                functions.print_results(self.variables, pv, i)
+                data_for_plot = functions.get_data_for_plot()
+                self.create_plot(self.right_frame, data_for_plot)
             self.update_gui()
             time.sleep(0.5)
-
-
-
 
 def main():
     root = Tk()

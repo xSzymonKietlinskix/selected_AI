@@ -35,10 +35,16 @@ class BProfile:
         self.glob_id = glob_id
         self.id = id
 
+    def __str__(self):
+        return f"{self.id, self.glob_id, self.b_type, self.IC_thr, self.inv_a, self.CAP_incr, self.p_risc}"
+
 class DProfile:
     def __init__(self, id, glob_id):
         self.id = id
         self.glob_id = glob_id
+
+    def __str__(self):
+        return f"{self.id, self.glob_id}"
 
 class AActivity:
     def __init__(self, id, glob_id, pos_changed, curr_cap, cap_increased, increase_reason, cap_decreased, decrease_reason, cap_not_changed,  d_susp_buisness, crA_of_emerg_hops):
@@ -55,6 +61,9 @@ class AActivity:
         self.d_susp_buisness = d_susp_buisness
         self.crA_of_emerg_hops = crA_of_emerg_hops
 
+    def __str__(self):
+        return f"{self.id, self.glob_id, self.pos_changed, self.curr_cap, self.cap_increased, self.increase_reason, self.cap_increased, self.decrease_reason, self.cap_not_changed, self.d_susp_buisness, self.crA_of_emerg_hops}"
+
 class BActivity:
     def __init__(self, id, glob_id, b_type, crB_of_emerg_hops):
         self.type = b_type
@@ -62,10 +71,15 @@ class BActivity:
         self.glob_id = glob_id
         self.id = id
 
+    def __str__(self):
+        return f"{self.id, self.glob_id, self.type, self.crB_of_emerg_hops}"
+
 class DActivity:
     def __init__(self, id, glob_id, crD_of_emerg_hops):
         self.crD_of_emerg_hops = crD_of_emerg_hops
         self.glob_id = glob_id
         self.id = id
 
+    def __str__(self):
+        return f"{self.id, self.glob_id, self.crD_of_emerg_hops}"
 
