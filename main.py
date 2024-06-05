@@ -12,13 +12,14 @@ def main_fun(variables, pv, iteration):
         a_profile.decrease_reason = decrease_reason
         a_profile.cap_not_changed = cap_not_changed
 
+
     for i in range(int(variables.n_of_A)):
         if pv.A_ACTIVITY[i].crA_of_emerg_hops > 0:
             pv.A_ACTIVITY[i].crA_of_emerg_hops = pv.A_ACTIVITY[i].crA_of_emerg_hops - 1
             # activity 3
             continue
         else:
-            glob_ID = int(pv.A_PROFILE[i].glob_id)
+            glob_ID = int(pv.A_ACTIVITY[i].glob_id)
             MY_NEIGHB = functions.copy_neighborhood(glob_ID, variables, pv.cells_neighbors, pv.ca_states_temp)
             if_deseas = False
             for n in MY_NEIGHB:
@@ -69,6 +70,18 @@ def main_fun(variables, pv, iteration):
 
             if len(list_of_businesses_glob_id) == 0:
                 # Activity 6
+                FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB,
+                                                                                            pv.cells_neighbors)
+                #    if debug then debug.txt print
+                if free_space:
+                    functions.move_rand_neighb_loc(i, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables,
+                                                   FREE_SPACE_LOC,
+                                                   "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE,
+                                                   A_ACTIVITY=pv.A_ACTIVITY)
+                    #    if debug then debug.txt print
+                else:
+                    functions.move_to_free_ca_state(i, variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
+                                                    A_ACTIVITY=pv.A_ACTIVITY)
                 continue
             else:
                 list_of_bus_id = []
@@ -168,7 +181,7 @@ def main_fun(variables, pv, iteration):
                                             x = pv.RAND_NUM[iteration]
                                         else:
                                             x = random.random()
-                                        if x <= variables.B3_p_risc:
+                                        if x <= float(variables.B3_p_risc):
                                             invest_cap = float(pv.A_ACTIVITY[i].curr_cap) * float(variables.B3_inv_a)
                                             new_cap = float(pv.A_ACTIVITY[i].curr_cap) - invest_cap
                                             pv.A_ACTIVITY[i].curr_cap = new_cap
@@ -196,17 +209,16 @@ def main_fun(variables, pv, iteration):
                                            "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE, A_ACTIVITY=pv.A_ACTIVITY)
             #    if debug then debug.txt print
         else:
-            functions.move_to_free_ca_state(variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
+            functions.move_to_free_ca_state(i,variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
                                             A_ACTIVITY=pv.A_ACTIVITY)
 
-        print("Kapitał: ", pv.A_ACTIVITY[i].curr_cap)
     # end of processing of Ai
 
 
 
 
     for j in range(int(variables.n_of_B)):
-        glob_ID = pv.B_PROFILE[j].glob_id
+        glob_ID = pv.B_ACTIVITY[j].glob_id
         i_id, j_id = divmod(glob_ID, int(variables.n_colls))
         MY_NEIGHB = functions.copy_neighborhood(glob_ID, variables, pv.cells_neighbors, pv.ca_states_temp)
         FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB, pv.cells_neighbors)
@@ -215,10 +227,10 @@ def main_fun(variables, pv, iteration):
             functions.move_rand_neighb_loc(j, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables, FREE_SPACE_LOC, "B", pv.ca_states_temp, B_PROFILE=pv.B_PROFILE, B_ACTIVITY=pv.B_ACTIVITY)
             #    if debug then debug.txt print
         else:
-            functions.move_to_free_ca_state(variables, pv.ca_states_temp, "B", B_PROFILE=pv.B_PROFILE, B_ACTIVITY=pv.B_ACTIVITY)
+            functions.move_to_free_ca_state(j,variables, pv.ca_states_temp, "B", B_PROFILE=pv.B_PROFILE, B_ACTIVITY=pv.B_ACTIVITY)
 
     for k in range(int(variables.n_of_D)):
-        glob_ID = pv.D_PROFILE[k].glob_id
+        glob_ID = pv.D_ACTIVITY[k].glob_id
         MY_NEIGHB = functions.copy_neighborhood(glob_ID, variables, pv.cells_neighbors, pv.ca_states_temp)
         FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB, pv.cells_neighbors)
 
@@ -228,7 +240,7 @@ def main_fun(variables, pv, iteration):
             functions.move_rand_neighb_loc(k, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables, FREE_SPACE_LOC, "D", pv.ca_states_temp, D_PROFILE=pv.D_PROFILE, D_ACTIVITY=pv.D_ACTIVITY)
             #    if debug then debug.txt print
         else:
-            functions.move_to_free_ca_state(variables, pv.ca_states_temp, "D", D_PROFILE=pv.D_PROFILE, D_ACTIVITY=pv.D_ACTIVITY)
+            functions.move_to_free_ca_state(k,variables, pv.ca_states_temp, "D", D_PROFILE=pv.D_PROFILE, D_ACTIVITY=pv.D_ACTIVITY)
 
     pv.CA_STATES = pv.ca_states_temp
     CA_STATES_display = [row[1:] for row in pv.CA_STATES.board[1:]]

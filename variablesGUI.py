@@ -59,7 +59,12 @@ class VariablesGUI:
 
 
     def create_entry(self, r, c, v_n):
-        Label(self.left_frame, text=v_n).grid(row=r, column=c)
+        if v_n == "power":
+            Label(self.left_frame, text="poor").grid(row=r, column=c)
+        elif v_n == "fax":
+            Label(self.left_frame, text="fair").grid(row=r, column=c)
+        else:
+            Label(self.left_frame, text=v_n).grid(row=r, column=c)
         if isinstance(self.variables.__dict__[v_n], bool):
             var = BooleanVar()
             Checkbutton(self.left_frame, variable=var).grid(row=r, column=c + 1)
@@ -281,9 +286,7 @@ class VariablesGUI:
             2: "plum",
             3: "#87ceeb",
             4: "#0000cd",
-            5: "#4169e1",
-            6: "orange",
-            7: "red"
+            5: "#4169e1"
         }
         # Update the color of each rectangle
         for row_idx, row in enumerate(self.variables.board_values):
@@ -296,7 +299,7 @@ class VariablesGUI:
                                 color = "red"
                             elif float(a.curr_cap) >= float(self.variables.fax):
                                 color = "orange"
-                            else:
+                            elif float(a.curr_cap) < float(self.variables.fax):
                                 color = "yellow"
                 else:
                     color = color_map.get(value, "white")
@@ -373,6 +376,7 @@ class VariablesGUI:
                 functions.print_results(self.variables, pv, i)
                 data_for_plot = functions.get_data_for_plot()
                 self.create_plot(self.right_frame, data_for_plot)
+                print("Plansza: " + str(pv.CA_STATES))
             self.update_gui()
             time.sleep(0.5)
 

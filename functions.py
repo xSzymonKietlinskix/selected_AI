@@ -82,23 +82,23 @@ def create_rand_CA_STATES(variables, CA_STATES,
             CA_STATES.board[i_ID][j_ID] = 3
             glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
             B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].b_type = 3
+            B_PROFILE[j].b_type = 1
             B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].b_type = 3
+            B_ACTIVITY[j].type = 1
         elif x == 2:
             CA_STATES.board[i_ID][j_ID] = 4
             glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
             B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].b_type = 4
+            B_PROFILE[j].b_type = 2
             B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].b_type = 4
+            B_ACTIVITY[j].type = 2
         elif x == 3:
             CA_STATES.board[i_ID][j_ID] = 5
             glob_ID = CA_ACTIVE_ABS[i_ID][j_ID]
             B_PROFILE[j].glob_id = glob_ID
-            B_PROFILE[j].b_type = 5
+            B_PROFILE[j].b_type = 3
             B_ACTIVITY[j].glob_id = glob_ID
-            B_ACTIVITY[j].b_type = 5
+            B_ACTIVITY[j].type = 3
     # create decrease Dk
     for k in range(0, int(variables.n_of_D)):
         i_ID = random.randint(1, int(variables.m_rows))
@@ -128,7 +128,7 @@ def find_free_space_neigh(j, MY_NEIGHB, CELLS_NEIGHBORS):
     return FREE_SPACE_LOC, free_space, cr_free_space
 
 
-def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
+def move_to_free_ca_state(k,variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
     CA_free_loc_found = False
 
     while not CA_free_loc_found:
@@ -137,31 +137,31 @@ def move_to_free_ca_state(variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = No
         if CA_STATES_TEMP.board[i + 1][j + 1] == 0:
             CA_free_loc_found = True
             if A_or_B_or_D == "B":
-                if B_PROFILE[j].b_type == 1:
+                if B_PROFILE[k].b_type == 1:
                     code_B = 3
-                elif B_PROFILE[j].b_type == 2:
+                elif B_PROFILE[k].b_type == 2:
                     code_B = 4
                 else: code_B = 5
                 CA_STATES_TEMP.board[i + 1][j + 1] = code_B
-                i_id, j_id = divmod(B_ACTIVITY[j].glob_id -1, int(variables.n_colls))
-                CA_STATES_TEMP[i_id + 1][j_id + 1] = 0
-                B_ACTIVITY[j].glob_id = free_glob_id
-                B_ACTIVITY[j].crB_of_emerg_hops += 1
+                i_id, j_id = divmod(B_ACTIVITY[k].glob_id -1, int(variables.n_colls))
+                CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
+                B_ACTIVITY[k].glob_id = free_glob_id
+                B_ACTIVITY[k].crB_of_emerg_hops += 1
 
             elif A_or_B_or_D == "A":
                 CA_STATES_TEMP.board[i + 1][j + 1] = 1
-                i_id, j_id = divmod(A_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+                i_id, j_id = divmod(A_ACTIVITY[k].glob_id -1, int(variables.n_colls))
                 CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
-                A_ACTIVITY[j].glob_id = free_glob_id
-                A_ACTIVITY[j].crA_of_emerg_hops += 1
-                A_ACTIVITY[j].pos_changed = 1
+                A_ACTIVITY[k].glob_id = free_glob_id
+                A_ACTIVITY[k].crA_of_emerg_hops += 1
+                A_ACTIVITY[k].pos_changed = 1
 
             elif A_or_B_or_D == "D":
                 CA_STATES_TEMP.board[i+1][j+1] = 2
-                i_id, j_id = divmod(D_ACTIVITY[j].glob_id -1, int(variables.n_colls))
+                i_id, j_id = divmod(D_ACTIVITY[k].glob_id -1, int(variables.n_colls))
                 CA_STATES_TEMP.board[i_id + 1][j_id + 1] = 0
-                D_ACTIVITY[j].glob_id = free_glob_id
-                D_ACTIVITY[j].crD_of_emerg_hops += 1
+                D_ACTIVITY[k].glob_id = free_glob_id
+                D_ACTIVITY[k].crD_of_emerg_hops += 1
 
 
 def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, FREE_SPACE_LOC, A_or_B_or_D, CA_STATES_TEMP, A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
@@ -245,10 +245,10 @@ def print_results(variables, pv, iteration):
     for a in pv.A_ACTIVITY:
         if a.curr_cap >= float(variables.rich):
             rich.append(a)
-        elif a.curr_cap <= float(variables.power):
-            poor.append(a)
-        else:
+        elif a.curr_cap >= float(variables.fax):
             fax.append(a)
+        elif a.curr_cap < float(variables.fax):
+            poor.append(a)
 
     if len(fax) != 0:
         sorted_fax = sorted(fax, key=lambda a: a.curr_cap)
