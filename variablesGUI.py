@@ -242,11 +242,11 @@ class VariablesGUI:
 
     def generate_board(self, rows, cols):
         if self.canvas is not None:
-            self.canvas.delete("all")
+            self.canvas.delete("all")  # Usuń wszystkie elementy z canvasu
 
-        canvas_width = self.master.winfo_width() * 0.7
-        canvas_height = self.master.winfo_height()
-
+        # Oblicz wymiary canvasu i komórek
+        canvas_width = self.left_frame.winfo_width() * 0.7
+        canvas_height = self.left_frame.winfo_height()
         color_map = {
             0: "white",
             1: "yellow",
@@ -255,14 +255,22 @@ class VariablesGUI:
             4: "#0000cd",
             5: "#4169e1"
         }
-
         cell_size = min(canvas_width / cols, canvas_height / rows) * 0.7
         board_width = cols * cell_size
         board_height = rows * cell_size
-        self.canvas = Canvas(self.right_frame, width=board_width, height=board_height, bg='white')
-        self.canvas.pack()
 
+        # Utwórz nowy canvas, jeśli nie istnieje, lub zresetuj go
+        if self.canvas is None:
+            self.canvas = Canvas(self.right_frame, width=board_width, height=board_height, bg='white')
+            self.canvas.pack()
+        else:
+            self.canvas.config(width=board_width, height=board_height)
+            self.canvas.delete("all")  # Usuń wszystkie elementy z canvasu
+
+        # Zresetuj tablicę prostokątów
         self.rectangles = []
+
+        # Generuj prostokąty na planszy
         for row_idx, row in enumerate(self.variables.board_values):
             row_rectangles = []
             for col_idx, value in enumerate(row):
@@ -273,9 +281,9 @@ class VariablesGUI:
                 color = color_map.get(value, "white")
                 rectangle = self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill=color)
                 row_rectangles.append(rectangle)
-                # self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", fill=color)
             self.rectangles.append(row_rectangles)
 
+        # Zaktualizuj wymiary canvasu
         self.canvas.config(width=board_width, height=board_height)
         self.canvas.update_idletasks()
 
@@ -353,10 +361,9 @@ class VariablesGUI:
             self.variables.board_values = [[0] * int(self.variables.n_colls) for _ in range(int(self.variables.m_rows))]
 
         for i in range(0, int(self.variables.n_of_iter)):
-            print("Iteracja: ", i)
+            #print("Iteracja: ", i)
             if i == 0:
-                if self.canvas is None:
-                    self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
+                self.generate_board(int(self.variables.m_rows), int(self.variables.n_colls))
                 self.variables.board_values, pv = iter0(self.variables)
                 self.update_board(pv)
                 with open('results.txt', 'w') as file:
@@ -376,7 +383,7 @@ class VariablesGUI:
                 functions.print_results(self.variables, pv, i)
                 data_for_plot = functions.get_data_for_plot()
                 self.create_plot(self.right_frame, data_for_plot)
-                print("Plansza: " + str(pv.CA_STATES))
+                #print("Plansza: " + str(pv.CA_STATES))
             self.update_gui()
             time.sleep(0.5)
 
