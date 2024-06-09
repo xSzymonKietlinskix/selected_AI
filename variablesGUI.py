@@ -25,8 +25,31 @@ class VariablesGUI:
         self.rectangles = []
         self.root = master
 
+    def default_values(self):
+        debug_values = []
+        with open("Debugging data/debug_data.txt", "r") as file:
+            for line in file:
+                debug_values.append(str(line.strip()))
+
+        i = 0
+        for var_name, entry in self.entries.items():
+            if type(entry) == BooleanVar:
+                entry.set(False)
+            else:
+                entry.insert(0, debug_values[i])
+            i += 1
+
     def debug_fun(self):
         if self.var_debug.get() is True:
+            i = 0
+            for var_name, entry in self.entries.items():
+                if type(entry) == BooleanVar:
+                    entry.set(False)
+                elif type(entry) == IntVar:
+                    entry.set(1)
+                else:
+                    entry.delete(0, 'end')
+                i += 1
             debug_values = []
             with open("Debugging data/debug_data.txt", "r") as file:
                 for line in file:
@@ -35,9 +58,9 @@ class VariablesGUI:
             i = 0
             for var_name, entry in self.entries.items():
                 if type(entry) == BooleanVar:
-                    entry.set(bool(debug_values[i]))
+                    entry.set(True)
                 else:
-                    entry.insert(0,debug_values[i])
+                    entry.insert(0, debug_values[i])
                 i += 1
 
             with open("Debugging data/CA_STATES.txt", "r") as file:
@@ -50,10 +73,6 @@ class VariablesGUI:
             for var_name, entry in self.entries.items():
                 if type(entry) == BooleanVar:
                     entry.set(False)
-                elif type(entry) == IntVar:
-                    entry.set(1)
-                else:
-                    entry.delete(0,'end')
                 i += 1
 
 
@@ -63,6 +82,19 @@ class VariablesGUI:
             Label(self.left_frame, text="poor").grid(row=r, column=c)
         elif v_n == "fax":
             Label(self.left_frame, text="fair").grid(row=r, column=c)
+        elif v_n == "B1_gap":
+            Label(self.left_frame, text="B1_inc_cap").grid(row=r, column=c)
+        elif v_n == "B2_gap":
+            Label(self.left_frame, text="B2_inc_cap").grid(row=r, column=c)
+        elif v_n == "B3_gap":
+            Label(self.left_frame, text="B3_inc_cap").grid(row=r, column=c)
+        elif v_n == "B1_p_avoid":
+            Label(self.left_frame, text="B1_p_avail").grid(row=r, column=c)
+        elif v_n == "B2_p_avoid":
+            Label(self.left_frame, text="B2_p_avail").grid(row=r, column=c)
+        elif v_n == "B3_p_avoid":
+            Label(self.left_frame, text="B3_p_avail").grid(row=r, column=c)
+
         else:
             Label(self.left_frame, text=v_n).grid(row=r, column=c)
         if isinstance(self.variables.__dict__[v_n], bool):
@@ -216,6 +248,8 @@ class VariablesGUI:
             if i == 50:
                 r += 1
                 c = 0
+                Label(self.left_frame, text="", font=("Helvetica", 12, "bold")).grid(row=r)
+                r+=1
             if i == 52:
                 r+=1
                 c=0
@@ -390,6 +424,7 @@ class VariablesGUI:
 def main():
     root = Tk()
     app = VariablesGUI(root)
+    app.default_values()
     root.mainloop()
 
 if __name__ == "__main__":

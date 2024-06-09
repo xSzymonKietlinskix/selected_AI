@@ -165,12 +165,12 @@ def move_to_free_ca_state(k,variables, CA_STATES_TEMP, A_or_B_or_D ,A_PROFILE = 
 
 
 def move_rand_neighb_loc(j, cr_free_space, debug_pointer, RAND_NUM, variables, FREE_SPACE_LOC, A_or_B_or_D, CA_STATES_TEMP, A_PROFILE = None, A_ACTIVITY = None, B_PROFILE = None, B_ACTIVITY = None, D_PROFILE = None, D_ACTIVITY = None):
-    if variables.debug is True:
-        x = RAND_NUM[debug_pointer]
+    if variables.read_RAND_NUM is True:
         if debug_pointer == 50:
-            debug_pointer = 1
+            debug_pointer = 0
         else:
             debug_pointer += 1
+        x = RAND_NUM[debug_pointer]
     else:
         x = random.random()
 

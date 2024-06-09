@@ -27,8 +27,11 @@ def main_fun(variables, pv, iteration):
                     if_deseas = True
                     break
             if if_deseas is True:
-                if variables.debug is True:
-                    x = pv.RAND_NUM[iteration]
+                if variables.read_RAND_NUM is True:
+                    if pv.debug_pointer == len(pv.RAND_NUM):
+                        pv.debug_pointer = 0
+                    x = pv.RAND_NUM[pv.debug_pointer]
+                    pv.debug_pointer += 1
                 else:
                     x = random.random()
                 H_state = pv.A_PROFILE[i].Hstate
@@ -70,18 +73,18 @@ def main_fun(variables, pv, iteration):
 
             if len(list_of_businesses_glob_id) == 0:
                 # Activity 6
-                FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB,
-                                                                                            pv.cells_neighbors)
-                #    if debug then debug.txt print
-                if free_space:
-                    functions.move_rand_neighb_loc(i, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables,
-                                                   FREE_SPACE_LOC,
-                                                   "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE,
-                                                   A_ACTIVITY=pv.A_ACTIVITY)
-                    #    if debug then debug.txt print
-                else:
-                    functions.move_to_free_ca_state(i, variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
-                                                    A_ACTIVITY=pv.A_ACTIVITY)
+                # FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB,
+                #                                                                             pv.cells_neighbors)
+                # #    if debug then debug.txt print
+                # if free_space:
+                #     functions.move_rand_neighb_loc(i, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables,
+                #                                    FREE_SPACE_LOC,
+                #                                    "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE,
+                #                                    A_ACTIVITY=pv.A_ACTIVITY)
+                #     #    if debug then debug.txt print
+                # else:
+                #     functions.move_to_free_ca_state(i, variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
+                #                                     A_ACTIVITY=pv.A_ACTIVITY)
                 continue
             else:
                 list_of_bus_id = []
@@ -100,8 +103,11 @@ def main_fun(variables, pv, iteration):
                                 my_IQ = 2
                             elif int(pv.A_PROFILE[i].IQ) > int(variables.IQ3_greater):
                                 my_IQ = 3
-                            if variables.debug is True:
-                                x = pv.RAND_NUM[iteration]
+                            if variables.read_RAND_NUM is True:
+                                if pv.debug_pointer == len(pv.RAND_NUM):
+                                    pv.debug_pointer = 0
+                                x = pv.RAND_NUM[pv.debug_pointer]
+                                pv.debug_pointer += 1
                             else:
                                 x = random.random()
                             if bi.b_type == 1:
@@ -113,8 +119,11 @@ def main_fun(variables, pv, iteration):
                                     elif my_IQ == 3:
                                         B1_risc_accept = float(variables.B1_3)
                                     if x <= B1_risc_accept:
-                                        if variables.debug is True:
-                                            x = pv.RAND_NUM[iteration]
+                                        if variables.read_RAND_NUM is True:
+                                            if pv.debug_pointer == len(pv.RAND_NUM):
+                                                pv.debug_pointer = 0
+                                            x = pv.RAND_NUM[pv.debug_pointer]
+                                            pv.debug_pointer += 1
                                         else:
                                             x = random.random()
                                         if x <= float(variables.B1_p_risc):
@@ -145,8 +154,11 @@ def main_fun(variables, pv, iteration):
                                     elif my_IQ == 3:
                                         B2_risc_accept = float(variables.B2_3)
                                     if x <= B2_risc_accept:
-                                        if variables.debug is True:
-                                            x = pv.RAND_NUM[iteration]
+                                        if variables.read_RAND_NUM is True:
+                                            if pv.debug_pointer == len(pv.RAND_NUM):
+                                                pv.debug_pointer = 0
+                                            x = pv.RAND_NUM[pv.debug_pointer]
+                                            pv.debug_pointer += 1
                                         else:
                                             x = random.random()
                                         if x <= float(variables.B2_p_risc):
@@ -177,8 +189,11 @@ def main_fun(variables, pv, iteration):
                                     elif my_IQ == 3:
                                         B3_risc_accept = float(variables.B3_3)
                                     if x <= B3_risc_accept:
-                                        if variables.debug is True:
-                                            x = pv.RAND_NUM[iteration]
+                                        if variables.read_RAND_NUM is True:
+                                            if pv.debug_pointer == len(pv.RAND_NUM):
+                                                pv.debug_pointer = 0
+                                            x = pv.RAND_NUM[pv.debug_pointer]
+                                            pv.debug_pointer += 1
                                         else:
                                             x = random.random()
                                         if x <= float(variables.B3_p_risc):
@@ -201,16 +216,16 @@ def main_fun(variables, pv, iteration):
                                 else:
                                     break
                         break
-        FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB,
-                                                                                pv.cells_neighbors)
-        #    if debug then debug.txt print
-        if free_space:
-            functions.move_rand_neighb_loc(i, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables, FREE_SPACE_LOC,
-                                           "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE, A_ACTIVITY=pv.A_ACTIVITY)
-            #    if debug then debug.txt print
-        else:
-            functions.move_to_free_ca_state(i,variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
-                                            A_ACTIVITY=pv.A_ACTIVITY)
+        # FREE_SPACE_LOC, free_space, cr_free_space = functions.find_free_space_neigh(glob_ID - 1, MY_NEIGHB,
+        #                                                                         pv.cells_neighbors)
+        # #    if debug then debug.txt print
+        # if free_space:
+        #     functions.move_rand_neighb_loc(i, cr_free_space, pv.debug_pointer, pv.RAND_NUM, variables, FREE_SPACE_LOC,
+        #                                    "A", pv.ca_states_temp, A_PROFILE=pv.A_PROFILE, A_ACTIVITY=pv.A_ACTIVITY)
+        #     #    if debug then debug.txt print
+        # else:
+        #     functions.move_to_free_ca_state(i,variables, pv.ca_states_temp, "A", A_PROFILE=pv.A_PROFILE,
+        #                                     A_ACTIVITY=pv.A_ACTIVITY)
 
     # end of processing of Ai
 
